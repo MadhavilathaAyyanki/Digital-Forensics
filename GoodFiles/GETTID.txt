@@ -1,0 +1,62 @@
+GETTID(2)                  Linux Programmer's Manual                 GETTID(2)
+
+
+
+NNAAMMEE
+       gettid - get thread identification
+
+SSYYNNOOPPSSIISS
+       ##ddeeffiinnee __GGNNUU__SSOOUURRCCEE
+       ##iinncclluuddee <<uunniissttdd..hh>>
+       ##iinncclluuddee <<ssyyss//ttyyppeess..hh>>
+
+       ppiidd__tt ggeettttiidd((vvooiidd));;
+
+DDEESSCCRRIIPPTTIIOONN
+       ggeettttiidd()  returns  the  caller's thread ID (TID).  In a single-threaded
+       process, the thread ID is equal to the process ID (PID, as returned  by
+       ggeettppiidd(2)).  In a multithreaded process, all threads have the same PID,
+       but each one has a unique TID.  For further details, see the discussion
+       of CCLLOONNEE__TTHHRREEAADD in cclloonnee(2).
+
+RREETTUURRNN VVAALLUUEE
+       On success, returns the thread ID of the calling thread.
+
+EERRRROORRSS
+       This call is always successful.
+
+VVEERRSSIIOONNSS
+       The ggeettttiidd() system call first appeared on Linux in kernel 2.4.11.  Li-
+       brary support was added in glibc 2.30.  (Earlier glibc versions did not
+       provide  a  wrapper  for  this  system  call,  necessitating the use of
+       ssyyssccaallll(2).)
+
+CCOONNFFOORRMMIINNGG TTOO
+       ggeettttiidd() is Linux-specific and should not be used in programs that  are
+       intended to be portable.
+
+NNOOTTEESS
+       The  thread  ID  returned by this call is not the same thing as a POSIX
+       thread ID (i.e., the opaque value returned by pptthhrreeaadd__sseellff(3)).
+
+       In a new thread group created by a cclloonnee(2) call that does not  specify
+       the  CCLLOONNEE__TTHHRREEAADD  flag  (or,  equivalently,  a  new process created by
+       ffoorrkk(2)), the new process is a thread  group  leader,  and  its  thread
+       group ID (the value returned by ggeettppiidd(2)) is the same as its thread ID
+       (the value returned by ggeettttiidd()).
+
+SSEEEE AALLSSOO
+       ccaappggeett(2), cclloonnee(2), ffccnnttll(2), ffoorrkk(2), ggeett__rroobbuusstt__lliisstt(2),  ggeettppiidd(2),
+       iioopprriioo__sseett(2),   ppeerrff__eevveenntt__ooppeenn(2),  sscchheedd__sseettaaffffiinniittyy(2),  sscchheedd__sseett--
+       ppaarraamm(2), sscchheedd__sseettsscchheedduulleerr(2), ttggkkiillll(2), ttiimmeerr__ccrreeaattee(2)
+
+CCOOLLOOPPHHOONN
+       This page is part of release 5.10 of the Linux  _m_a_n_-_p_a_g_e_s  project.   A
+       description  of  the project, information about reporting bugs, and the
+       latest    version    of    this    page,    can     be     found     at
+       https://www.kernel.org/doc/man-pages/.
+
+
+
+Linux                             2020-04-11                         GETTID(2)
+1458c4b93c525ce988732c348733d34c44ff677f9590669cdbfb7e1b058c9e52

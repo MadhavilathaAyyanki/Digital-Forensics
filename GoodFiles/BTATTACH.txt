@@ -1,0 +1,75 @@
+BTATTACH(1)               Linux System Administration              BTATTACH(1)
+
+
+
+NNAAMMEE
+       btattach - Attach serial devices to BlueZ stack
+
+SSYYNNOOPPSSIISS
+       bbttaattttaacchh [--BB _d_e_v_i_c_e] [--AA _d_e_v_i_c_e] [--PP _p_r_o_t_o_c_o_l] [--RR]
+
+DDEESSCCRRIIPPTTIIOONN
+       bbttaattttaacchh((11)) is used to attach a serial UART to the Bluetooth stack as a
+       transport interface.
+
+OOPPTTIIOONNSS
+       --BB _d_e_v_i_c_e, ----bbrrddeerr _d_e_v_i_c_e
+              Attach a BR/EDR controller
+
+       --AA _d_e_v_i_c_e, ----aammpp _d_e_v_i_c_e
+              Attach an AMP controller
+
+       --PP _p_r_o_t_o_c_o_l, ----pprroottooccooll _p_r_o_t_o_c_o_l
+              Specify the protocol type for talking to the device.
+
+              Supported values are:
+
+                                     +---------+
+                                     |_p_r_o_t_o_c_o_l |
+                                     +---------+
+                                     |h4       |
+                                     +---------+
+                                     |bcsp     |
+                                     +---------+
+                                     |3wire    |
+                                     +---------+
+                                     |h4ds     |
+                                     +---------+
+                                     |ll       |
+                                     +---------+
+                                     |ath3k    |
+                                     +---------+
+                                     |intel    |
+                                     +---------+
+                                     |bcm      |
+                                     +---------+
+                                     |qca      |
+                                     +---------+
+
+       --SS _b_a_u_d_r_a_t_e, ----ssppeeeedd _b_a_u_d_r_a_t_e
+              Specify wich baudrate to use
+
+       --NN, ----nnoofflloowwccttll
+              Disable flow control
+
+       --vv, ----vveerrssiioonn
+              Show version
+
+       --hh, ----hheellpp
+              Show help options
+
+RREESSOOUURRCCEESS
+       _h_t_t_p_:_/_/_w_w_w_._b_l_u_e_z_._o_r_g
+
+RREEPPOORRTTIINNGG BBUUGGSS
+       _l_i_n_u_x_-_b_l_u_e_t_o_o_t_h_@_v_g_e_r_._k_e_r_n_e_l_._o_r_g
+
+CCOOPPYYRRIIGGHHTT
+       Free use of this software is granted under ther terms of the GNU Lesser
+       General Public Licenses (LGPL).
+
+
+
+
+BlueZ                            November 2015                     BTATTACH(1)
+8897fd3174ff932aee0a7cd126f04675adaa936e41fe96fd1aa02e470355c116

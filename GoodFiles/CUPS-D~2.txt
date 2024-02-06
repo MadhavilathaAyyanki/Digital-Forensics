@@ -1,0 +1,62 @@
+cupsd-helper(8)                  OpenPrinting                  cupsd-helper(8)
+
+
+
+NNAAMMEE
+       cupsd-helper - cupsd helper programs (deprecated)
+
+SSYYNNOOPPSSIISS
+       ccuuppss--ddeevviicceedd _r_e_q_u_e_s_t_-_i_d _l_i_m_i_t _u_s_e_r_-_i_d _o_p_t_i_o_n_s
+       ccuuppss--ddrriivveerrdd ccaatt _p_p_d_-_n_a_m_e
+       ccuuppss--ddrriivveerrdd lliisstt _r_e_q_u_e_s_t___i_d _l_i_m_i_t _o_p_t_i_o_n_s
+       ccuuppss--eexxeecc  _s_a_n_d_b_o_x_-_p_r_o_f_i_l_e [ _-_g _g_r_o_u_p_-_i_d ] [ _-_n _n_i_c_e_-_v_a_l_u_e ] [ _-_u _u_s_e_r_-
+       _i_d ] _/_p_a_t_h_/_t_o_/_p_r_o_g_r_a_m _a_r_g_v_0 _._._.  _a_r_g_v_N
+
+DDEESSCCRRIIPPTTIIOONN
+       The ccuuppssdd--hheellppeerr programs perform long-running operations on behalf  of
+       the  scheduler,  ccuuppssdd(8).   The  ccuuppss--ddeevviicceedd helper program runs each
+       CUPS bbaacckkeenndd(7) with no arguments in order to  discover  the  available
+       printers.
+
+       The  ccuuppss--ddrriivveerrdd helper program lists all available printer drivers, a
+       subset of "matching" printer drivers, or a copy of  a  specific  driver
+       PPD file.
+
+       The  ccuuppss--eexxeecc  helper  program  runs backends, filters, and other pro-
+       grams. On macOS these programs are run in a secure sandbox.
+
+FFIILLEESS
+       The ccuuppss--ddrriivveerrdd program looks for PPD and driver information files  in
+       the following directories:
+
+           _/_L_i_b_r_a_r_y_/_P_r_i_n_t_e_r_s
+           _/_o_p_t_/_s_h_a_r_e_/_p_p_d
+           _/_S_y_s_t_e_m_/_L_i_b_r_a_r_y_/_P_r_i_n_t_e_r_s
+           _/_u_s_r_/_l_o_c_a_l_/_s_h_a_r_e_/_p_p_d
+           _/_u_s_r_/_s_h_a_r_e_/_c_u_p_s_/_d_r_v
+           _/_u_s_r_/_s_h_a_r_e_/_c_u_p_s_/_m_o_d_e_l
+           _/_u_s_r_/_s_h_a_r_e_/_p_p_d
+
+       PPD files can be compressed using the ggzziipp(1) program or placed in com-
+       pressed ttaarr(1) archives to further reduce their size.
+
+       Driver information files must conform to the format  defined  in  ppppddcc--
+       ffiillee(5).
+
+NNOOTTEESS
+       CUPS  printer  drivers, backends, and PPD files are deprecated and will
+       no longer be supported in a future feature release of  CUPS.   Printers
+       that  do  not  support  IPP can be supported using applications such as
+       iippppeevveepprriinntteerr(1).
+
+SSEEEE AALLSSOO
+       bbaacckkeenndd(7), ccuuppss(1), ccuuppssdd(8), ccuuppssdd..ccoonnff(5),  ffiilltteerr(7),  ppppddccffiillee(5),
+       CUPS Online Help (http://localhost:631/help)
+
+CCOOPPYYRRIIGGHHTT
+       Copyright (C) 2021-2022 by OpenPrinting.
+
+
+
+2021-02-28                           CUPS                      cupsd-helper(8)
+39e4b3f2ae81a6e5f33a73f8072d07bce17d4322055074425e3b439b64c0202b

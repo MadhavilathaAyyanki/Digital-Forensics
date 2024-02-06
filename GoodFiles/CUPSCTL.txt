@@ -1,0 +1,75 @@
+cupsctl(8)                       OpenPrinting                       cupsctl(8)
+
+
+
+NNAAMMEE
+       cupsctl - configure cupsd.conf options
+
+SSYYNNOOPPSSIISS
+       ccuuppssccttll [ --EE ] [ --UU _u_s_e_r_n_a_m_e ] [ --hh _s_e_r_v_e_r[::_p_o_r_t] ] [ ----[nnoo--]ddeebbuugg--lloogg--
+       ggiinngg   ]   [   ----[nnoo--]rreemmoottee--aaddmmiinn   ]   [   ----[nnoo--]rreemmoottee--aannyy   ]    [
+       ----[nnoo--]sshhaarree--pprriinntteerrss ] [ ----[nnoo--]uusseerr--ccaanncceell--aannyy ] [ _n_a_m_e_=_v_a_l_u_e ]
+
+DDEESSCCRRIIPPTTIIOONN
+       ccuuppssccttll  updates  or  queries the _c_u_p_s_d_._c_o_n_f file for a server. When no
+       changes are requested, the current configuration values are written  to
+       the standard output in the format "name=value", one per line.
+
+OOPPTTIIOONNSS
+       The following options are recognized:
+
+       --EE   Enables encryption on the connection to the scheduler.
+
+       --UU _u_s_e_r_n_a_m_e
+            Specifies  an  alternate  username to use when authenticating with
+            the scheduler.
+
+       --hh _s_e_r_v_e_r[::_p_o_r_t]
+            Specifies the server address.
+
+       ----[nnoo--]ddeebbuugg--llooggggiinngg
+            Enables (disables) debug logging to the _e_r_r_o_r___l_o_g file.
+
+       ----[nnoo--]rreemmoottee--aaddmmiinn
+            Enables (disables) remote administration.
+
+       ----[nnoo--]rreemmoottee--aannyy
+            Enables (disables) printing from any address, e.g., the Internet.
+
+       ----[nnoo--]sshhaarree--pprriinntteerrss
+            Enables (disables) sharing of local printers with other computers.
+
+       ----[nnoo--]uusseerr--ccaanncceell--aannyy
+            Allows (prevents) users to cancel jobs owned by others.
+
+EEXXAAMMPPLLEESS
+       Display the current settings:
+
+           cupsctl
+
+       Enable debug logging:
+
+           cupsctl --debug-logging
+
+       Get the current debug logging state:
+
+           cupsctl | grep '^_debug_logging' | awk -F= '{print $2}'
+
+       Disable printer sharing:
+
+           cupsctl --no-share-printers
+
+KKNNOOWWNN IISSSSUUEESS
+       You cannot set the Listen or Port directives using ccuuppssccttll.
+
+SSEEEE AALLSSOO
+       ccuuppssdd..ccoonnff(5), ccuuppssdd(8),
+       CUPS Online Help (http://localhost:631/help)
+
+CCOOPPYYRRIIGGHHTT
+       Copyright (C) 2021-2022 by OpenPrinting.
+
+
+
+2021-02-28                           CUPS                           cupsctl(8)
+05362728086ca2ce7410545a4eaa37de2ae53f66f40d006ca0523063adda5bdb

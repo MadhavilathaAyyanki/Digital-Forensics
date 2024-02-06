@@ -1,0 +1,56 @@
+Folder/Directory at cluster 3:
+GoodFile: BOOTCTL - Length: 12839
+GoodFile: BRLTTY - Length: 29105
+GoodFile: BROADW~1 - Length: 1870
+GoodFile: BRUSHT~1 - Length: 698
+GoodFile: BSDCAT - Length: 1061
+GoodFile: BSDCPIO - Length: 14478
+GoodFile: BSDTAR - Length: 51299
+GoodFile: BTATTACH - Length: 2855
+GoodFile: BTMGMT - Length: 635
+GoodFile: BTMON - Length: 1561
+Folder/Directory at cluster 67:
+GoodFile: GETTID - Length: 3106
+GoodFile: GETTIM~1 - Length: 7987
+GoodFile: GETUID - Length: 2485
+GoodFile: GETUNW~1 - Length: 3508
+GoodFile: GETXATTR - Length: 5228
+Folder/Directory at cluster 81:
+GoodFile: CLASS-~1 - Length: 1983
+GoodFile: CLASS-~2 - Length: 4349
+GoodFile: CLASS-~3 - Length: 10047
+GoodFile: CLASS-~4 - Length: 2361
+GoodFile: CLASS-~5 - Length: 11664
+GoodFile: CLASS-~6 - Length: 10955
+GoodFile: CLASS-~7 - Length: 8256
+GoodFile: CLASS-~8 - Length: 7524
+GoodFile: CLASS-~9 - Length: 1080
+GoodFile: CLEARENV - Length: 3808
+Folder/Directory at cluster 117:
+GoodFile: INTERF~1 - Length: 2373
+GoodFile: INTERF~2 - Length: 42939
+GoodFile: INTRO - Length: 1235
+GoodFile: IPPTOO~1 - Length: 35107
+GoodFile: ISSUE - Length: 1130
+GoodFile: JOURNA~1 - Length: 25261
+GoodFile: KEYBOARD - Length: 7052
+GoodFile: KEYDNS~1 - Length: 2094
+GoodFile: KEYMAPS - Length: 15164
+Folder/Directory at cluster 188:
+GoodFile: EVP_KD~1 - Length: 6430
+GoodFile: EVP_KD~2 - Length: 7608
+GoodFile: EVP_KD~3 - Length: 6212
+GoodFile: EVP_KD~4 - Length: 5805
+GoodFile: EVP_KD~5 - Length: 4231
+GoodFile: EVP_KD~6 - Length: 6328
+Folder/Directory at cluster 211:
+GoodFile: CUPS-B~1 - Length: 6688
+GoodFile: CUPSCTL - Length: 2838
+GoodFile: CUPSD - Length: 3619
+GoodFile: CUPS-D~1 - Length: 3196
+GoodFile: CUPSD-~1 - Length: 3196
+GoodFile: CUPSDI~1 - Length: 3074
+GoodFile: CUPS-D~2 - Length: 3196
+GoodFile: CUPSEN~1 - Length: 3074
+GoodFile: CUPS-E~1 - Length: 3196
+GoodFile: CUPSFI~1 - Length: 4435

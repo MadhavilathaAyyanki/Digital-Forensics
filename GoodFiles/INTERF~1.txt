@@ -1,0 +1,57 @@
+INTERFACE-ORDER(5)                resolvconf                INTERFACE-ORDER(5)
+
+
+
+NNAAMMEE
+       interface-order - resolvconf configuration file
+
+DDEESSCCRRIIPPTTIIOONN
+       The  file  _/_e_t_c_/_r_e_s_o_l_v_c_o_n_f_/_i_n_t_e_r_f_a_c_e_-_o_r_d_e_r is used to control the order
+       in which resolvconf nameserver information  records  are  processed  by
+       those  resolvconf  update scripts that consult this file.  (The name of
+       the file is apt because a resolvconf nameserver information  record  is
+       named after the interface with which it is associated.)
+
+       The file contains a sequence of shell glob patterns, one per line.  The
+       position of a record in the order is the point at which its name  first
+       matches a pattern.
+
+       Patterns may not contain whitespace, slashes or initial dots or tildes.
+       Blank lines and lines beginning with a '#' are ignored.
+
+       Resolvconf update scripts  in  _/_e_t_c_/_r_e_s_o_l_v_c_o_n_f_/_u_p_d_a_t_e_._d_/  that  consult
+       this  file  include  the current default versions of _d_n_s_m_a_s_q, _p_d_n_s_d and
+       _l_i_b_c.  (Actually they don't read the file directly; they call the util-
+       ity  program  _/_l_i_b_/_r_e_s_o_l_v_c_o_n_f_/_l_i_s_t_-_r_e_c_o_r_d_s  which  lists records in the
+       specified order and omits the names of empty records.)
+
+EEXXAAMMPPLLEE
+       # /etc/resolvconf/interface-order
+       # Use nameservers on the loopback interface first.
+       lo*
+       # Next use records for Ethernet interfaces
+       eth*
+       # Next use records for Wi-Fi interfaces
+       wlan*
+       # Next use records for PPP interfaces
+       ppp*
+       # Last use other interfaces
+       *
+
+
+AAUUTTHHOORR
+       Resolvconf was written by Thomas Hood <jdthood@gmail.com>.
+
+CCOOPPYYRRIIGGHHTT
+       Copyright (C) 2004, 2011 Thomas Hood
+       This is free software; see the source for copying conditions.  There is
+       NO  warranty;  not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+       PURPOSE.
+
+SSEEEE AALLSSOO
+       rreessoollvvccoonnff(8)
+
+
+
+resolvconf                        18 May 2011               INTERFACE-ORDER(5)
+0aebaea601f95fb2d6dfe31cd06f083648296f80ea7d7af6760811de4a424b41

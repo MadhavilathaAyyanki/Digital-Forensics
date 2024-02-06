@@ -1,0 +1,55 @@
+Class::C3::XS(3pm)    User Contributed Perl Documentation   Class::C3::XS(3pm)
+
+
+
+NNAAMMEE
+       Class::C3::XS - XS speedups for Class::C3
+
+VVEERRSSIIOONN
+       version 0.15
+
+SSYYNNOOPPSSIISS
+         use Class::C3; # Automatically loads Class::C3::XS
+                        #  if it's installed locally
+
+DDEESSCCRRIIPPTTIIOONN
+       This contains XS performance enhancers for Class::C3 version 0.16 and
+       higher.  The main Class::C3 package will use this package automatically
+       if it can find it.  Do not use this package directly, use Class::C3
+       instead.
+
+       The test suite here is not complete, although it does verify a few
+       basic things.  The best testing comes from running the Class::C3 test
+       suite *after* this module is installed.
+
+       This module won't do anything for you if you're running a version of
+       Class::C3 older than 0.16.  (It's not a dependency because it would be
+       circular with the optional dependency from that package to this one).
+
+SSUUPPPPOORRTT
+       Bugs may be submitted through the RT bug tracker
+       <https://rt.cpan.org/Public/Dist/Display.html?Name=Class-C3-XS> (or
+       bug-Class-C3-XS@rt.cpan.org <mailto:bug-Class-C3-XS@rt.cpan.org>).
+
+AAUUTTHHOORR
+       Brandon L. Black <blblack@gmail.com>
+
+CCOONNTTRRIIBBUUTTOORRSS
+       +o   Florian Ragwitz <rafl@debian.org>
+
+       +o   Karen Etheridge <ether@cpan.org>
+
+       +o   Graham Knop <haarg@haarg.org>
+
+       +o   Yuval Kogman <nothingmuch@woobling.org>
+
+CCOOPPYYRRIIGGHHTT AANNDD LLIICCEENNCCEE
+       This software is copyright (c) 2007 by Brandon L. Black.
+
+       This is free software; you can redistribute it and/or modify it under
+       the same terms as the Perl 5 programming language system itself.
+
+
+
+perl v5.34.0                      2022-02-06                Class::C3::XS(3pm)
+f929778258a55d0412118b9c7b5c2b7315be27628548a12f559cb4fdf31d5bfc

@@ -1,0 +1,76 @@
+GETUNWIND(2)               Linux Programmer's Manual              GETUNWIND(2)
+
+
+
+NNAAMMEE
+       getunwind - copy the unwind data to caller's buffer
+
+SSYYNNOOPPSSIISS
+       ##iinncclluuddee <<ssyyssccaallll..hh>>
+       ##iinncclluuddee <<lliinnuuxx//uunnwwiinndd..hh>>
+
+       lloonngg ggeettuunnwwiinndd((vvooiidd _*_b_u_f,, ssiizzee__tt _b_u_f___s_i_z_e));;
+
+       _N_o_t_e: There is no glibc wrapper for this system call; see NOTES.
+
+DDEESSCCRRIIPPTTIIOONN
+       _N_o_t_e_: _t_h_i_s _f_u_n_c_t_i_o_n _i_s _o_b_s_o_l_e_t_e_.
+
+       The  IA-64-specific  ggeettuunnwwiinndd()  system  call copies the kernel's call
+       frame unwind data into the buffer pointed to by  _b_u_f  and  returns  the
+       size of the unwind data; this data describes the gate page (kernel code
+       that is mapped into user space).
+
+       The size of the buffer _b_u_f is  specified  in  _b_u_f___s_i_z_e.   The  data  is
+       copied only if _b_u_f___s_i_z_e is greater than or equal to the size of the un-
+       wind data and _b_u_f is not NULL; otherwise, no data is  copied,  and  the
+       call succeeds, returning the size that would be needed to store the un-
+       wind data.
+
+       The first part of the unwind data contains an unwind table.   The  rest
+       contains  the  associated  unwind  information, in no particular order.
+       The unwind table contains entries of the following form:
+
+           u64 start;      (64-bit address of start of function)
+           u64 end;        (64-bit address of end of function)
+           u64 info;       (BUF-relative offset to unwind info)
+
+       An entry whose _s_t_a_r_t value is zero indicates the end of the table.  For
+       more  information  about the format, see the _I_A_-_6_4 _S_o_f_t_w_a_r_e _C_o_n_v_e_n_t_i_o_n_s
+       _a_n_d _R_u_n_t_i_m_e _A_r_c_h_i_t_e_c_t_u_r_e manual.
+
+RREETTUURRNN VVAALLUUEE
+       On success, ggeettuunnwwiinndd() returns the size of the unwind data.  On error,
+       -1 is returned and _e_r_r_n_o is set to indicate the error.
+
+EERRRROORRSS
+       ggeettuunnwwiinndd()  fails  with  the  error EEFFAAUULLTT if the unwind info can't be
+       stored in the space specified by _b_u_f.
+
+VVEERRSSIIOONNSS
+       This system call is available since Linux 2.4.
+
+CCOONNFFOORRMMIINNGG TTOO
+       This system call is Linux-specific, and is available only on the  IA-64
+       architecture.
+
+NNOOTTEESS
+       This  system  call  has  been deprecated.  The modern way to obtain the
+       kernel's unwind data is via the vvddssoo(7).
+
+       Glibc does not provide a wrapper for this system call; in the  unlikely
+       event that you want to call it, use ssyyssccaallll(2).
+
+SSEEEE AALLSSOO
+       ggeettaauuxxvvaall(3)
+
+CCOOLLOOPPHHOONN
+       This  page  is  part of release 5.10 of the Linux _m_a_n_-_p_a_g_e_s project.  A
+       description of the project, information about reporting bugs,  and  the
+       latest     version     of     this    page,    can    be    found    at
+       https://www.kernel.org/doc/man-pages/.
+
+
+
+Linux                             2017-09-15                      GETUNWIND(2)
+da3069f312207299cc6c79ca646924c911743a3c1c3cf927a82f9a6ae0dfd4fc
