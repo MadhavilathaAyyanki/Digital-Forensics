@@ -1,0 +1,80 @@
+cupsd(8)                         OpenPrinting                         cupsd(8)
+
+
+
+NNAAMMEE
+       cupsd - cups scheduler
+
+SSYYNNOOPPSSIISS
+       ccuuppssdd  [  --cc  _c_u_p_s_d_._c_o_n_f  ]  [  --ff  ]  [  --FF ] [ --hh ] [ --ll ] [ --ss _c_u_p_s_-
+       _f_i_l_e_s_._c_o_n_f ] [ --tt ]
+
+DDEESSCCRRIIPPTTIIOONN
+       ccuuppssdd is the scheduler for CUPS. It implements a printing system  based
+       upon  the Internet Printing Protocol, version 2.1, and supports most of
+       the requirements for IPP Everywhere. If no options are specified on the
+       command-line  then  the default configuration file _/_e_t_c_/_c_u_p_s_/_c_u_p_s_d_._c_o_n_f
+       will be used.
+
+OOPPTTIIOONNSS
+       --cc _c_u_p_s_d_._c_o_n_f
+            Uses the named cupsd.conf configuration file.
+
+       --ff   Run ccuuppssdd in the foreground; the default is to run  in  the  back-
+            ground as a "daemon".
+
+       --FF   Run  ccuuppssdd  in the foreground but detach the process from the con-
+            trolling terminal and current directory. This is useful  for  run-
+            ning ccuuppssdd from iinniitt(8).
+
+       --hh   Shows the program usage.
+
+       --ll   This  option  is passed to ccuuppssdd when it is run from llaauunncchhdd(8) or
+            ssyysstteemmdd(8).
+
+       --ss _c_u_p_s_-_f_i_l_e_s_._c_o_n_f
+            Uses the named cups-files.conf configuration file.
+
+       --tt   Test the configuration file for syntax errors.
+
+FFIILLEESS
+       _/_e_t_c_/_c_u_p_s_/_c_l_a_s_s_e_s_._c_o_n_f
+       _/_e_t_c_/_c_u_p_s_/_c_u_p_s_-_f_i_l_e_s_._c_o_n_f
+       _/_e_t_c_/_c_u_p_s_/_c_u_p_s_d_._c_o_n_f
+       _/_u_s_r_/_s_h_a_r_e_/_c_u_p_s_/_m_i_m_e_/_m_i_m_e_._c_o_n_v_s
+       _/_u_s_r_/_s_h_a_r_e_/_c_u_p_s_/_m_i_m_e_/_m_i_m_e_._t_y_p_e_s
+       _/_e_t_c_/_c_u_p_s_/_p_r_i_n_t_e_r_s_._c_o_n_f
+       _/_e_t_c_/_c_u_p_s_/_s_u_b_s_c_r_i_p_t_i_o_n_s_._c_o_n_f
+
+CCOONNFFOORRMMIINNGG TTOO
+       ccuuppssdd implements all of the required IPP/2.1 attributes and operations.
+       It also implements several CUPS-specific administrative operations.
+
+EEXXAAMMPPLLEESS
+       Run ccuuppssdd in the background with the default configuration file:
+
+           cupsd
+
+       Test a configuration file called _t_e_s_t_._c_o_n_f:
+
+           cupsd -t -c test.conf
+
+       Run  ccuuppssdd  in  the  foreground  with  a test configuration file called
+       _t_e_s_t_._c_o_n_f:
+
+           cupsd -f -c test.conf
+
+
+SSEEEE AALLSSOO
+       bbaacckkeenndd(7), ccllaasssseess..ccoonnff(5), ccuuppss(1), ccuuppss--ffiilleess..ccoonnff(5),  ccuuppss--llppdd(8),
+       ccuuppssdd..ccoonnff(5),  ccuuppssdd--hheellppeerr(8),  ccuuppssdd--llooggss(8), ffiilltteerr(7), llaauunncchhdd(8),
+       mmiimmee..ccoonnvvss(5), mmiimmee..ttyyppeess(5), pprriinntteerrss..ccoonnff(5), ssyysstteemmdd(8), CUPS Online
+       Help (http://localhost:631/help)
+
+CCOOPPYYRRIIGGHHTT
+       Copyright (C) 2021-2022 by OpenPrinting.
+
+
+
+2021-02-28                           CUPS                             cupsd(8)
+c34276ecbc6cf3bde816708b3ace1d60052284b7dc7931bba942aef3336180e3

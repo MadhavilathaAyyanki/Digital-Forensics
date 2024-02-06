@@ -1,0 +1,579 @@
+BRLTTY(1)                    BRLTTY User's Manual                    BRLTTY(1)
+
+
+
+NNAAMMEE
+       brltty - refreshable braille display driver for Linux/Unix
+
+SSYYNNOOPPSSIISS
+       bbrrllttttyy [_o_p_t_i_o_n ...]
+
+DDEESSCCRRIIPPTTIIOONN
+       bbrrllttttyy  is  a  background process (daemon) which provides access to the
+       console screen (when in text mode) for a blind person using a  refresh-
+       able braille display.  It drives the braille display, and provides com-
+       plete screen review functionality.  Some  speech  capability  has  also
+       been incorporated.
+
+OOPPTTIIOONNSS
+       Options  can  be  passed  to  bbrrllttttyy in a number of ways.  From most to
+       least influential, these are:
+
+       1.  Command Line Options
+
+       2.  Boot Parameters
+
+       3.  Environment Variables (if the --EE  (----eennvviirroonnmmeenntt--vvaarriiaabblleess)  option
+           is in effect)
+
+       4.  The Configuration File
+
+       5.  Built-in Defaults
+
+   CCoommmmaanndd LLiinnee OOppttiioonnss
+       The  options  are processed sequentially from left to right.  If an op-
+       tion is specified more than once, or in case of a conflict, the  right-
+       most specification takes precedence.
+
+       The following options are supported:
+
+       --aa _t_a_b_l_e (----aattttrriibbuutteess--ttaabbllee==)
+              The  path  to the attributes table.  Relative paths are anchored
+              at //eettcc//bbrrllttttyy//AAttttrriibbuutteess.  The ..aattbb extension is optional.  The
+              built-in default is lleefftt__rriigghhtt..aattbb.
+
+       --bb _d_r_i_v_e_r,,...|aauuttoo (----bbrraaiillllee--ddrriivveerr==)
+              The  driver  for the braille display (see Driver Specification).
+              The built-in default is aauuttoo.
+
+       --cc _t_a_b_l_e (----ccoonnttrraaccttiioonn--ttaabbllee==)
+              The path to the contraction table.  Relative paths are  anchored
+              at //eettcc//bbrrllttttyy//CCoonnttrraaccttiioonn.  The ..ccttbb extension is optional.
+
+       --dd _d_e_v_i_c_e,,... (----bbrraaiillllee--ddeevviiccee==)
+              The  device  to  which  the  braille  display is connected.  The
+              built-in default is uussbb::,,bblluueettooootthh::.
+
+              The general form of a braille  device  specification  is  _q_u_a_l_i_-
+              _f_i_e_r::_d_a_t_a.  For backward compatibility with earlier releases, if
+              the qualifier is omitted then sseerriiaall:: is assumed.  The following
+              device types are supported:
+
+              BBlluueettooootthh
+                     For  a  bluetooth device, specify bblluueettooootthh::_a_d_d_r_e_s_s.  The
+                     address must be six two-digit hexadecimal  numbers  sepa-
+                     rated by colons, e.g.  0011::2233::4455::6677::8899::AABB.
+
+              SSeerriiaall For  a serial device, specify sseerriiaall::_d_e_v_i_c_e.  The sseerriiaall::
+                     qualifier is optional (for backward compatibility).  If a
+                     relative  path  is given then it's anchored at //ddeevv// (the
+                     usual location where devices are defined on  a  Unix-like
+                     system).   The  following device specifications all refer
+                     to the primary serial device on Linux: sseerriiaall::ttttyySS00,  ssee--
+                     rriiaall:://ddeevv//ttttyySS00, ttttyySS00, //ddeevv//ttttyySS00.
+
+              UUSSBB    For  a  USB device, specify uussbb::.  bbrrllttttyy will search for
+                     the first USB device which matches  the  braille  display
+                     driver  being  used.   If this is inadequate, e.g. if you
+                     have more than one USB braille display which requires the
+                     same driver, then you can refine the device specification
+                     by appending the serial number of the display to it, e.g.
+                     uussbb::1122334455.   N.B.:  The "identification by serial number"
+                     feature doesn't work for some models because  some  manu-
+                     facturers either don't set the USB serial number descrip-
+                     tor at all or do set it but not to a unique value.
+
+              A comma-delimited list of braille devices may be specified.   If
+              this  is done then autodetection is performed on each listed de-
+              vice in sequence.  This feature is particularly  useful  if  you
+              have a braille display with more than one interface, e.g. both a
+              serial and a USB port.
+
+       --ee (----ssttaannddaarrdd--eerrrroorr)
+              Write logs to standard error rather than to the system log (use-
+              ful for debugging).
+
+       --ff _f_i_l_e (----ccoonnffiigguurraattiioonn--ffiillee==)
+              The path to the configuration file.  Relative paths are anchored
+              at the current  working  directory.   The  built-in  default  is
+              //eettcc//bbrrllttttyy..ccoonnff.
+
+       --hh (----hheellpp)
+              Print a command line usage summary (commonly used options only),
+              and then exit.
+
+       --ii _n_a_m_e (----ssppeeeecchh--iinnppuutt==)
+              The file system object (FIFO, named  pipe,  named  socket,  etc)
+              which  gives other applications access to bbrrllttttyy's speech driver
+              for text-to-speech conversion.  It's created at start-up and re-
+              moved  at  termination.  Relative paths are anchored at the cur-
+              rent working directory.  The built-in default is that  the  file
+              system object is not created.
+
+       --kk _t_a_b_l_e (----kkeeyybbooaarrdd--ttaabbllee==)
+              The  path to the keyboard table.  Relative paths are anchored at
+              //eettcc//bbrrllttttyy//KKeeyybbooaarrdd.  The ..kkttbb extension is optional.
+
+       --ll _l_e_v_e_l (----lloogg--lleevveell==)
+              The minimum severity level for messages written to the log.  Any
+              of  the  following  numbers, or any abbreviation of their corre-
+              sponding names, may be specified:
+
+              00   eemmeerrggeennccyy
+
+              11   aalleerrtt
+
+              22   ccrriittiiccaall
+
+              33   eerrrroorr
+
+              44   wwaarrnniinngg
+
+              55   nnoottiiccee
+
+              66   iinnffoorrmmaattiioonn
+
+              77   ddeebbuugg
+
+       The built-in default is nnoottiiccee.
+
+       --mm _d_e_v_i_c_e (----mmiiddii--ddeevviiccee==)
+              The device to use for the Musical Instrument Digital  Interface.
+              For  ALSA it's _c_l_i_e_n_t::_p_o_r_t, where each may be either a number or
+              a case-sensitive substring of its name.   For  other  interfaces
+              it's  the full path to an appropriate system device.  The built-
+              in default is:
+
+              Linux/ALSA  the first available MIDI output port
+
+              Linux/OSS   //ddeevv//sseeqquueenncceerr
+
+       --nn (----nnoo--ddaaeemmoonn)
+              Remain in the foreground (useful for debugging).
+
+       --oo _n_a_m_e==_v_a_l_u_e,,... (----oovveerrrriiddee--pprreeffeerreennccee==)
+              Override a preference setting.  For the location of the  prefer-
+              ences file, see the --FF (----pprreeffeerreenncceess--ffiillee) option.
+
+       --pp _d_e_v_i_c_e (----ppccmm--ddeevviiccee==)
+              The  device to use for digital audio.  For ALSA it's _n_a_m_e[::_a_r_g_u_-
+              _m_e_n_t,,...].  For other interfaces it's the full path to an appro-
+              priate system device.  The built-in default is:
+
+              FreeBSD     //ddeevv//ddsspp
+
+              Linux/ALSA  hhww::00,,00
+
+              Linux/OSS   //ddeevv//ddsspp
+
+              NetBSD      //ddeevv//aauuddiioo
+
+              OpenBSD     //ddeevv//aauuddiioo
+
+              Qnx         the preferred PCM output device
+
+              Solaris     //ddeevv//aauuddiioo
+
+       --qq (----qquuiieett)
+              Suppress  the  start-up  messages.  This is done by reducing the
+              default log level (see the --ll (----lloogg--lleevveell==) option) to  wwaarrnniinngg
+              (iinnffoorrmmaattiioonn  if  either --vv (----vveerriiffyy) or --VV (----vveerrssiioonn) is also
+              specified).
+
+       --rr (----rreelleeaassee--ddeevviiccee)
+              Release the device to which the  braille  display  is  connected
+              when the current screen or window can't be read.
+
+       --ss _d_r_i_v_e_r,,...|aauuttoo (----ssppeeeecchh--ddrriivveerr==)
+              The  driver  for  the  speech synthesizer (see Driver Specifica-
+              tion).  The built-in default is aauuttoo.
+
+       --tt _t_a_b_l_e (----tteexxtt--ttaabbllee==)
+              The path to the text table.   Relative  paths  are  anchored  at
+              //eettcc//bbrrllttttyy//TTeexxtt.  The ..ttttbb extension is optional.  The built-in
+              default is eenn--nnaabbcccc..ttttbb (the  North  American  Braille  Computer
+              Code).
+
+       --vv (----vveerriiffyy)
+              Print the start-up messages and then exit.  This always includes
+              the versions of bbrrllttttyy itself, the server side of  its  applica-
+              tion programming interface, and each of the selected braille and
+              speech drivers.  If the --qq (----qquuiieett) option isn't also specified
+              then  it  also  includes  the  values  of  the options after all
+              sources have been considered.  If more than one  braille  driver
+              and/or  more  than  one  braille  device has been specified then
+              braille display autodetection is performed.  If  more  than  one
+              speech driver has been specified then speech synthesizer autode-
+              tection is performed.
+
+       --xx _d_r_i_v_e_r (----ssccrreeeenn--ddrriivveerr==)
+              The screen driver.  The built-in default is operating system ap-
+              propriate.
+
+       --AA _n_a_m_e==_v_a_l_u_e,,... (----aappii--ppaarraammeetteerrss==)
+              Parameters  for  the  application programming interface.  If the
+              same parameter is specified more than once  then  the  rightmost
+              specification is used.  Parameter names may be abbreviated.
+
+       --BB [_d_r_i_v_e_r::]_n_a_m_e==_v_a_l_u_e,,... (----bbrraaiillllee--ppaarraammeetteerrss==)
+              Parameters  for the braille display driver.  If the same parame-
+              ter is specified more than once then the rightmost specification
+              is  used.   Parameter  names may be abbreviated.  If a parameter
+              assignment is qualified with a driver identification  code  then
+              it's  only  processed  if  that  braille display driver is being
+              used.
+
+       --DD _d_i_r_e_c_t_o_r_y (----ddrriivveerrss--ddiirreeccttoorryy==)
+              The path to the directory which contains the  dynamically  load-
+              able driver objects.  The built-in default is /lib/brltty..
+
+       --EE (----eennvviirroonnmmeenntt--vvaarriiaabblleess)
+              Recognize environment variables.
+
+       --FF _f_i_l_e (----pprreeffeerreenncceess--ffiillee==)
+              The  path  to the preferences file.  Relative paths are anchored
+              at //vvaarr//lliibb//bbrrllttttyy.  The built-in default is bbrrllttttyy..pprreeffss.
+
+       --HH (----ffuullll--hheellpp)
+              Print a command line usage summary (all options), and then exit.
+
+       --II (----iinnssttaallll--sseerrvviiccee)
+              (Windows only) Install bbrrllttttyy as the BBrrllAAPPII service so  that  it
+              will  be automatically started when the system is booted, and so
+              that applications can know that a BBrrllAAPPII server is running.
+
+       --KK _a_r_g (----kkeeyybbooaarrdd--pprrooppeerrttiieess==)
+              Properties of the keyboard.
+
+       --LL _f_i_l_e (----lloogg--ffiillee==)
+              The file to which log messages are written.  Relative paths  are
+              anchored  at  the  current working directory.  The default is to
+              send log messages to the system log.
+
+       --MM _c_s_e_c_s (----mmeessssaaggee--ddeellaayy==)
+              The message hold time in hundredths of a second.   The  built-in
+              default is 440000 (4 seconds).
+
+       --NN (----nnoo--aappii)
+              Don't start the application programming interface.
+
+       --PP _f_i_l_e (----ppiidd--ffiillee==)
+              The full path to the process identifier file.  If this option is
+              supplied, bbrrllttttyy writes its process identifier  (pid)  into  the
+              specified  file  at  start-up.   The file is removed when bbrrllttttyy
+              terminates.
+
+       --RR (----rreemmoovvee--sseerrvviiccee)
+              (Windows only) Remove the BBrrllAAPPII service so that bbrrllttttyy will not
+              be  automatically started when the system is booted, and so that
+              applications can know that no BBrrllAAPPII server is running.
+
+       --SS [_d_r_i_v_e_r::]_n_a_m_e==_v_a_l_u_e,,... (----ssppeeeecchh--ppaarraammeetteerrss==)
+              Parameters for the speech synthesizer driver.  If the  same  pa-
+              rameter  is specified more than once then the rightmost specifi-
+              cation is used.  Parameter names may be abbreviated.  If  a  pa-
+              rameter  assignment  is  qualified  with a driver identification
+              code then it's only processed if that speech synthesizer  driver
+              is being used.
+
+       --TT _d_i_r_e_c_t_o_r_y (----ttaabblleess--ddiirreeccttoorryy==)
+              The  path to the directory which contains the text, contraction,
+              attributes, keyboard, and input tables.  The built-in default is
+              /etc/brltty..
+
+       --UU _d_i_r_e_c_t_o_r_y (----uuppddaattaabbllee--ddiirreeccttoorryy==)
+              The  path  to  a  directory which contains files that can be up-
+              dated.  The built-in default is /var/lib/brltty..
+
+       --VV (----vveerrssiioonn)
+              Print the versions of bbrrllttttyy itself, the server side of its  ap-
+              plication  programming  interface,  and those drivers which were
+              configured in at build-time, and then exit.  If the --qq (----qquuiieett)
+              option  isn't  also specified then also print copyright informa-
+              tion.
+
+       --WW _d_i_r_e_c_t_o_r_y (----wwrriittaabbllee--ddiirreeccttoorryy==)
+              The path to a directory which can be written to.   The  built-in
+              default is /run/brltty..
+
+       --XX _n_a_m_e==_v_a_l_u_e,,... (----ssccrreeeenn--ppaarraammeetteerrss==)
+              Parameters  for  the  screen  driver.   If the same parameter is
+              specified more than once then  the  rightmost  specification  is
+              used.  Parameter names may be abbreviated.
+
+       --YY _t_e_x_t (----ssttaarrtt--mmeessssaaggee==)
+              The  text  to  be shown when the braille driver starts and to be
+              spoken when the speech driver starts.  The built-in  default  is
+              BRLTTY 6.4..
+
+       --ZZ _t_e_x_t (----ssttoopp--mmeessssaaggee==)
+              The  text to be shown when the braille driver stops.  The built-
+              in default is BRLTTY stopped..
+
+   EEnnvviirroonnmmeenntt VVaarriiaabblleess
+       The following environment variables are recognized if the  --EE  (----eennvvii--
+       rroonnmmeenntt--vvaarriiaabblleess) option is specified:
+
+       BBRRLLTTTTYY__AAPPII__PPAARRAAMMEETTEERRSS==_n_a_m_e==_v_a_l_u_e,,...
+              Parameters  for  the application programming interface.  See the
+              --AA (----aappii--ppaarraammeetteerrss==) option for details.
+
+       BBRRLLTTTTYY__AATTTTRRIIBBUUTTEESS__TTAABBLLEE==_t_a_b_l_e
+              The attributes table.  See the --aa  (----aattttrriibbuutteess--ttaabbllee==)  option
+              for details.
+
+       BBRRLLTTTTYY__BBRRAAIILLLLEE__DDEEVVIICCEE==_d_e_v_i_c_e,,...
+              The  device  to which the braille display is connected.  See the
+              --dd (----bbrraaiillllee--ddeevviiccee==) option for details.
+
+       BBRRLLTTTTYY__BBRRAAIILLLLEE__DDRRIIVVEERR==_d_r_i_v_e_r,,...|aauuttoo
+              The   driver   for   the   braille   display.    See   the    --bb
+              (----bbrraaiillllee--ddrriivveerr==) option for details.
+
+       BBRRLLTTTTYY__BBRRAAIILLLLEE__PPAARRAAMMEETTEERRSS==[_d_r_i_v_e_r::]_n_a_m_e==_v_a_l_u_e,,...
+              Parameters   for   the  braille  display  driver.   See  the  --BB
+              (----bbrraaiillllee--ppaarraammeetteerrss==) option for details.
+
+       BBRRLLTTTTYY__CCOONNFFIIGGUURRAATTIIOONN__FFIILLEE==_f_i_l_e
+              The configuration file.  See the --ff (----ccoonnffiigguurraattiioonn--ffiillee==)  op-
+              tion for details.
+
+       BBRRLLTTTTYY__CCOONNTTRRAACCTTIIOONN__TTAABBLLEE==_t_a_b_l_e
+              The contraction table.  See the --cc (----ccoonnttrraaccttiioonn--ttaabbllee==) option
+              for details.
+
+       BBRRLLTTTTYY__MMIIDDII__DDEEVVIICCEE==_d_e_v_i_c_e
+              The device to use for the Musical Instrument Digital  Interface.
+              See the --mm (----mmiiddii--ddeevviiccee==) option for details.
+
+       BBRRLLTTTTYY__PPCCMM__DDEEVVIICCEE==_d_e_v_i_c_e
+              The device to use for digital audio.  See the --pp (----ppccmm--ddeevviiccee==)
+              option for details.
+
+       BBRRLLTTTTYY__PPRREEFFEERREENNCCEESS__FFIILLEE==_f_i_l_e
+              The preferences file.  See the --FF  (----pprreeffeerreenncceess--ffiillee==)  option
+              for details.
+
+       BBRRLLTTTTYY__RREELLEEAASSEE__DDEEVVIICCEE==oonn|ooffff
+              Release  the  device  to  which the braille display is connected
+              when the current screen or window can't be  read.   See  the  --rr
+              (----rreelleeaassee--ddeevviiccee) option for details.
+
+       BBRRLLTTTTYY__SSCCRREEEENN__DDRRIIVVEERR==_d_r_i_v_e_r
+              The screen driver.  See the --xx (----ssccrreeeenn--ddrriivveerr==) option for de-
+              tails.
+
+       BBRRLLTTTTYY__SSCCRREEEENN__PPAARRAAMMEETTEERRSS==_n_a_m_e==_v_a_l_u_e,,...
+              Parameters for the screen driver.  See the --XX  (----ssccrreeeenn--ppaarraammee--
+              tteerrss==) option for details.
+
+       BBRRLLTTTTYY__SSPPEEEECCHH__DDRRIIVVEERR==_d_r_i_v_e_r,,...|aauuttoo
+              The   driver   for   the   speech   synthesizer.    See  the  --ss
+              (----ssppeeeecchh--ddrriivveerr==) option for details.
+
+       BBRRLLTTTTYY__SSPPEEEECCHH__IINNPPUUTT==_n_a_m_e
+              The file system object which gives other applications access  to
+              bbrrllttttyy's  speech  driver for text-to-speech conversion.  See the
+              --ii (----ssppeeeecchh--iinnppuutt==) option for details.
+
+       BBRRLLTTTTYY__SSPPEEEECCHH__PPAARRAAMMEETTEERRSS==[_d_r_i_v_e_r::]_n_a_m_e==_v_a_l_u_e,,...
+              Parameters for  the  speech  synthesizer  driver.   See  the  --SS
+              (----ssppeeeecchh--ppaarraammeetteerrss==) option for details.
+
+       BBRRLLTTTTYY__TTEEXXTT__TTAABBLLEE==_t_a_b_l_e
+              The text table.  See the --tt (----tteexxtt--ttaabbllee==) option for details.
+
+   TThhee CCoonnffiigguurraattiioonn FFiillee
+       Blank  lines  are  ignored.  If the character ## occurs on any line then
+       all characters from it to the end of that line are treated  as  a  com-
+       ment.
+
+       The following configuration directives are supported:
+
+       aappii--ppaarraammeetteerrss _n_a_m_e==_v_a_l_u_e,,...
+              Parameters  for  the application programming interface.  See the
+              --AA (----aappii--ppaarraammeetteerrss==) option for details.
+
+       aattttrriibbuutteess--ttaabbllee _t_a_b_l_e
+              The attributes table.  See the --aa  (----aattttrriibbuutteess--ttaabbllee==)  option
+              for details.
+
+       bbrraaiillllee--ddeevviiccee _d_e_v_i_c_e,,...
+              The  device  to which the braille display is connected.  See the
+              --dd (----bbrraaiillllee--ddeevviiccee==) option for details.
+
+       bbrraaiillllee--ddrriivveerr _d_r_i_v_e_r,,...|aauuttoo
+              The   driver   for   the   braille   display.    See   the    --bb
+              (----bbrraaiillllee--ddrriivveerr==) option for details.
+
+       bbrraaiillllee--ppaarraammeetteerrss [_d_r_i_v_e_r::]_n_a_m_e==_v_a_l_u_e,,...
+              Parameters   for   the  braille  display  driver.   See  the  --BB
+              (----bbrraaiillllee--ppaarraammeetteerrss==) option for details.
+
+       ccoonnttrraaccttiioonn--ttaabbllee _t_a_b_l_e
+              The contraction table.  See the --cc (----ccoonnttrraaccttiioonn--ttaabbllee==) option
+              for details.
+
+       mmiiddii--ddeevviiccee _d_e_v_i_c_e
+              The  device to use for the Musical Instrument Digital Interface.
+              See the --mm (----mmiiddii--ddeevviiccee==) option for details.
+
+       ppccmm--ddeevviiccee _d_e_v_i_c_e
+              The device to use for digital audio.  See the --pp (----ppccmm--ddeevviiccee==)
+              option for details.
+
+       pprreeffeerreenncceess--ffiillee _f_i_l_e
+              The  preferences  file.  See the --FF (----pprreeffeerreenncceess--ffiillee==) option
+              for details.
+
+       rreelleeaassee--ddeevviiccee oonn|ooffff
+              Release the device to which the  braille  display  is  connected
+              when  the  current  screen  or window can't be read.  See the --rr
+              (----rreelleeaassee--ddeevviiccee) option for details.
+
+       ssccrreeeenn--ddrriivveerr _d_r_i_v_e_r
+              The screen driver.  See the --xx (----ssccrreeeenn--ddrriivveerr==) option for de-
+              tails.
+
+       ssccrreeeenn--ppaarraammeetteerrss _n_a_m_e==_v_a_l_u_e,,...
+              Parameters  for the screen driver.  See the --XX (----ssccrreeeenn--ppaarraammee--
+              tteerrss==) option for details.
+
+       ssppeeeecchh--ddrriivveerr _d_r_i_v_e_r,,...|aauuttoo
+              The  driver  for   the   speech   synthesizer.    See   the   --ss
+              (----ssppeeeecchh--ddrriivveerr==) option for details.
+
+       ssppeeeecchh--iinnppuutt 00mmee
+              The  file system object which gives other applications access to
+              bbrrllttttyy's speech driver for text-to-speech conversion.   See  the
+              --ii (----ssppeeeecchh--iinnppuutt==) option for details.
+
+       ssppeeeecchh--ppaarraammeetteerrss [_d_r_i_v_e_r::]_n_a_m_e==_v_a_l_u_e,,...
+              Parameters  for  the  speech  synthesizer  driver.   See  the --SS
+              (----ssppeeeecchh--ppaarraammeetteerrss==) option for details.
+
+       tteexxtt--ttaabbllee _t_a_b_l_e
+              The text table.  See the --tt (----tteexxtt--ttaabbllee==) option for details.
+
+   DDrriivveerr SSppeecciiffiiccaattiioonn
+       A braille display or speech synthesizer driver must  be  specified  via
+       its identification code:
+
+              aall  Alva
+
+              aann  Android
+
+              aatt  Albatross
+
+              bbaa  BrlAPI
+
+              bbcc  BrailComm
+
+              bbdd  Braudi
+
+              bbll  BrailleLite
+
+              bbmm  Baum
+
+              bbnn  BrailleNote
+
+              ccbb  CombiBraille
+
+              ccee  Cebra
+
+              ccnn  Canute
+
+              eecc  EcoBraille
+
+              eenn  eSpeak-NG
+
+              eess  eSpeak
+
+              eeuu  EuroBraille
+
+              ffaa  FrankAudiodata
+
+              ffll  FestivalLite
+
+              ffss  FreedomScientific
+
+              ffvv  Festival
+
+              ggss  GenericSay
+
+              hhdd  Hedo
+
+              hhmm  HIMS
+
+              hhtt  HandyTech
+
+              hhww  HumanWare
+
+              iirr  Iris
+
+              iicc  Inceptor
+
+              llbb  Libbraille
+
+              lltt  LogText
+
+              mmbb  MultiBraille
+
+              mmdd  MDV
+
+              mmmm  BrailleMemo
+
+              mmnn  MiniBraille
+
+              mmpp  Mikropuhe
+
+              mmtt  Metec
+
+              nnoo  no driver
+
+              nnpp  NinePoint
+
+              ppgg  Pegasus
+
+              ppmm  Papenmeier
+
+              ssdd  SpeechDispatcher
+
+              sskk  Seika
+
+              ssww  Swift
+
+              tthh  Theta
+
+              ttnn  TechniBraille Systems Inc.
+
+              ttss  Telesensory Systems Inc.
+
+              vvdd  VideoBraille
+
+              vvoo  Voyager, Part232 (serial adapter), BraillePen/EasyLink
+
+              vvss  VisioBraille
+
+              vvvv  ViaVoice
+
+              xxss  ExternalSpeech
+
+              A  comma-delimited list of drivers may be specified.  If this is
+              done then autodetection is performed using each listed driver in
+              sequence.   You may need to experiment in order to determine the
+              most reliable order since some drivers  autodetect  better  than
+              others.
+
+              If  the single word aauuttoo is specified then autodetection is per-
+              formed using only those drivers which are known to  be  reliable
+              for this purpose.
+
+SSEEEE AALLSSOO
+       For    full    documentation,    see   bbrrllttttyy's   on-line   manual   at
+       [hhttttpp::////bbrrllttttyy..aapppp//ddooccuummeennttaattiioonn..hhttmmll].
+
+
+
+brltty 6.4                      September 2021                       BRLTTY(1)
+c352ed2ddd9a34d6cd3f675eb48f4849ac10072529dc2d2404e5d167c723e2c7

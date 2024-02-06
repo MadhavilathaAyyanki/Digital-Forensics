@@ -1,0 +1,152 @@
+KEYBOARD(5)               Console-setup User's Manual              KEYBOARD(5)
+
+
+
+NNAAMMEE
+       keyboard - keyboard configuration file
+
+DDEESSCCRRIIPPTTIIOONN
+       The  kkeeyybbooaarrdd file describes the properties of the keyboard. It is read
+       by sseettuuppccoonn(1) in order to configure the keyboard on the  console.   In
+       Debian  systems  the  default  keyboard layout is described in _/_e_t_c_/_d_e_-
+       _f_a_u_l_t_/_k_e_y_b_o_a_r_d and it is shared between X and the console.
+
+       The specification of the keyboard layout in the kkeeyybbooaarrdd file is  based
+       on the XKB options XkbModel, XkbLayout, XkbVariant and XkbOptions.  Un-
+       fortunately, there is little documentation how to use  them.   Descrip-
+       tion  of all possible values for these options can be found in the file
+       _x_o_r_g_._l_s_t.
+
+       You might want to read "The XKB Configuration Guide" by Kamil Toman and
+       Ivan U. Pascal:
+
+              http://www.xfree86.org/current/XKB-Config.html
+
+       Other possible readings are:
+
+              https://wiki.archlinux.org/index.php/X_KeyBoard_extension
+              http://pascal.tsu.ru/en/xkb/
+              http://www.charvolant.org/~doug/xkb/
+
+       The complete XKB-specification can be found on
+
+              http://xfree86.org/current/XKBproto.pdf
+
+       The file kkeeyybbooaarrdd consists of variable settings in POSIX format:
+
+              _V_A_R_I_A_B_L_E=_V_A_L_U_E
+
+       Only  one assignment is allowed per line.  Comments (starting with '#')
+       are also allowed.
+
+
+OOPPTTIIOONNSS
+       The following variables can be set.
+
+
+       XXKKBBMMOODDEELL
+              Specifies the XKB keyboard model name.  Default: ppcc110055  on  most
+              platforms.
+
+
+       XXKKBBLLAAYYOOUUTT
+              Specifies  the  XKB  keyboard  layout  name. This is usually the
+              country or language type of the keyboard. Default:  uuss  on  most
+              platforms
+
+
+       XXKKBBVVAARRIIAANNTT
+              Specifies the XKB keyboard variant components. These can be used
+              to further specify the keyboard  layout  details.  Default:  not
+              set.
+
+
+       XXKKBBOOPPTTIIOONNSS
+              Specifies  the  XKB keyboard option components.  Options usually
+              relate to the behavior of the special keys (<Shift>,  <Control>,
+              <Alt>, <CapsLock>, etc.)  Default: not set.
+
+
+       BBAACCKKSSPPAACCEE
+              Determines  the behavior of <BackSpace> and <Delete> keys on the
+              console.  Allowed values: bbss, ddeell and gguueessss.  In most cases  you
+              can  specify gguueessss here, in which case the current terminal set-
+              tings and the kernel of your operating system will  be  used  to
+              determine  the  correct value.  Value bbss specifies VT100-confor-
+              mant behavior: <BackSpace>  will  generate  ^^HH  (ASCII  BS)  and
+              <Delete>  will  generate  ^^??   (ASCII DEL).  Value ddeell specifies
+              VT220-conformant behavior: <BackSpace> will generate ^^??   (ASCII
+              DEL) and <Delete> will generate a special function sequence.
+
+
+       KKMMAAPP   Usually this variable will be unset but if you don't want to use
+              a XKB layout on the console,  you  can  specify  an  alternative
+              keymap here.  Specify a file that is suitable as input for llooaadd--
+              kkeeyyss(1) on Linux or for kkbbddccoonnttrrooll(1) on FreeBSD.
+
+
+FFIILLEESS
+       The standard location of the kkeeyybbooaarrdd  file  is  _/_e_t_c_/_d_e_f_a_u_l_t_/_k_e_y_b_o_a_r_d.
+       Description of all available keyboard models, layouts, variants and op-
+       tions is available in _/_u_s_r_/_s_h_a_r_e_/_X_1_1_/_x_k_b_/_r_u_l_e_s_/_x_o_r_g_._l_s_t.  In most  cas-
+       es, in _/_u_s_r_/_s_h_a_r_e_/_k_e_y_m_a_p_s_/ or _/_u_s_r_/_s_h_a_r_e_/_s_y_s_c_o_n_s_/_k_e_y_m_a_p_s_/ you will find
+       several keymaps that can be used with the variable KKMMAAPP.
+
+
+NNOOTTEESS
+       In Debian systems, changes in _/_e_t_c_/_d_e_f_a_u_l_t_/_k_e_y_b_o_a_r_d do not become imme-
+       diately visible to X.  You should either reboot the system, or use
+
+           udevadm trigger --subsystem-match=input --action=change
+
+       In order to activate the changes on the console, run sseettuuppccoonn(1)..
+
+
+BBUUGGSS
+       When  a  triple-layout is used on the console, i.e. a layout with three
+       XKB groups, then the group  toggling  happens  in  the  following  way:
+       Group1 -> Group2 -> Group1 -> Group3.
+
+       On  FreeBSD triple- and quadruple-layouts are not supported on the con-
+       sole (only the first and the second layout are taken into account).
+
+       The option ggrrpp::sshhiiffttss__ttooggggllee is not supported on the console.
+
+
+EEXXAAMMPPLLEESS
+       The following configuration will give you the standard US QWERTY layout
+       (uuss).   The  key  <Menu>  will  act as a compose key (ccoommppoossee::mmeennuu) and
+       <CapsLock> will act as third control key (ccttrrll::nnooccaappss).
+
+           XKBLAYOUT=us
+           XKBVARIANT=
+           XKBOPTIONS=compose:menu,ctrl:nocaps
+
+       In the following configuration the right <Alt>  key  (ggrrpp::ttooggggllee)  will
+       toggle between US QWERTY layout (uuss) and Greek (ggrr) layout.  The option
+       ggrrpp__lleedd::ssccrroollll is ignored on the console but in X in means to  use  the
+       ScrollLock  keyboard  led  as  indicator  for the current layout (US or
+       Greek).
+
+           XKBLAYOUT=us,gr
+           XKBVARIANT=
+           XKBOPTIONS=grp:toggle,grp_led:scroll
+
+       In the following configuration the  <Control>+<Shift>  key  combination
+       will  toggle (ggrrpp::ccttrrll__sshhiifftt__ttooggggllee) between French keyboard (ffrr) with-
+       out dead keys (nnooddeeaaddkkeeyyss) and British (ggbb) "Dvorak" (ddvvoorraakk) keyboard.
+       The  right <Win> key will be a compose-key (ccoommppoossee::rrwwiinn) and the right
+       <Alt> key will function as AltGr (llvv33::llaalltt__sswwiittcchh).
+
+           XKBLAYOUT=fr,gb
+           XKBVARIANT=nodeadkeys,dvorak
+           XKBOPTIONS=grp:ctrl_shift_toggle,compose:rwin,lv3:ralt_switch
+
+
+SSEEEE AALLSSOO
+       sseettuuppccoonn(1), cckkbbccoommpp(1), ccoonnssoollee--sseettuupp(5), llooaaddkkeeyyss(1), kkbbddccoonnttrrooll(1)
+
+
+
+console-setup                     2011-03-17                       KEYBOARD(5)
+cf82bf3ad95f9a0f20ba39f3e11563db6c31cc5c33caaf3543b9205759272863

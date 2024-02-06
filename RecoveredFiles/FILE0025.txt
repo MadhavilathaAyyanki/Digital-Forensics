@@ -1,0 +1,83 @@
+CLEARENV(3)                Linux Programmer's Manual               CLEARENV(3)
+
+
+
+NNAAMMEE
+       clearenv - clear the environment
+
+SSYYNNOOPPSSIISS
+       ##iinncclluuddee <<ssttddlliibb..hh>>
+
+       iinntt cclleeaarreennvv((vvooiidd));;
+
+   Feature Test Macro Requirements for glibc (see ffeeaattuurree__tteesstt__mmaaccrrooss(7)):
+
+       cclleeaarreennvv():
+           /* Glibc since 2.19: */ _DEFAULT_SOURCE
+               || /* Glibc versions <= 2.19: */ _SVID_SOURCE || _BSD_SOURCE
+
+DDEESSCCRRIIPPTTIIOONN
+       The  cclleeaarreennvv() function clears the environment of all name-value pairs
+       and sets the value of the external variable  _e_n_v_i_r_o_n  to  NULL.   After
+       this  call,  new  variables  can  be  added  to  the  environment using
+       ppuutteennvv(3) and sseetteennvv(3).
+
+RREETTUURRNN VVAALLUUEE
+       The cclleeaarreennvv() function returns zero on success, and a nonzero value on
+       failure.
+
+VVEERRSSIIOONNSS
+       Available since glibc 2.0.
+
+AATTTTRRIIBBUUTTEESS
+       For  an  explanation  of  the  terms  used  in  this  section,  see aatt--
+       ttrriibbuutteess(7).
+
+       +-----------+---------------+---------------------+
+       |IInntteerrffaaccee  | AAttttrriibbuuttee     | VVaalluuee               |
+       +-----------+---------------+---------------------+
+       |cclleeaarreennvv() | Thread safety | MT-Unsafe const:env |
+       +-----------+---------------+---------------------+
+
+CCOONNFFOORRMMIINNGG TTOO
+       Various UNIX variants (DG/UX, HP-UX, QNX, ...).  POSIX.9 (bindings  for
+       FORTRAN77).   POSIX.1-1996 did not accept cclleeaarreennvv() and ppuutteennvv(3), but
+       changed its mind and scheduled these functions for some later issue  of
+       this   standard   (see   B.4.6.1).   However,  POSIX.1-2001  adds  only
+       ppuutteennvv(3), and rejected cclleeaarreennvv().
+
+NNOOTTEESS
+       On systems where cclleeaarreennvv() is unavailable, the assignment
+
+           environ = NULL;
+
+       will probably do.
+
+       The cclleeaarreennvv() function may be useful  in  security-conscious  applica-
+       tions  that want to precisely control the environment that is passed to
+       programs executed using eexxeecc(3).  The  application  would  do  this  by
+       first clearing the environment and then adding select environment vari-
+       ables.
+
+       Note that the main effect of cclleeaarreennvv() is to adjust the value  of  the
+       pointer  eennvviirroonn(7);  this  function does not erase the contents of the
+       buffers containing the environment definitions.
+
+       The DG/UX and Tru64 man pages write: If _e_n_v_i_r_o_n has  been  modified  by
+       anything  other than the ppuutteennvv(3), ggeetteennvv(3), or cclleeaarreennvv() functions,
+       then cclleeaarreennvv() will return an error and the process  environment  will
+       remain unchanged.
+
+SSEEEE AALLSSOO
+       ggeetteennvv(3), ppuutteennvv(3), sseetteennvv(3), uunnsseetteennvv(3), eennvviirroonn(7)
+
+CCOOLLOOPPHHOONN
+       This  page  is  part of release 5.10 of the Linux _m_a_n_-_p_a_g_e_s project.  A
+       description of the project, information about reporting bugs,  and  the
+       latest     version     of     this    page,    can    be    found    at
+       https://www.kernel.org/doc/man-pages/.
+
+
+
+Linux                             2017-09-15                       CLEARENV(3)
+37094fcfb2be340cbc460b9e936cbcb52156e19dc267d6744b24fd8c9c519d0a

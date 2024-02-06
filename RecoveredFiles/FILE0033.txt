@@ -1,0 +1,50 @@
+KEY.DNS_RESOLVER.CONF(5)Linux Key Management UtilitiesKEY.DNS_RESOLVER.CONF(5)
+
+
+
+NNAAMMEE
+       key.dns_resolver.conf - Kernel DNS resolver config
+
+DDEESSCCRRIIPPTTIIOONN
+       This file is used by the key.dns_resolver(5) program to set parameters.
+       Unless otherwise overridden with the --cc flag, the program reads:
+
+              /etc/key.dns_resolver.conf
+
+       Configuration options are given in kkeeyy[[==vvaalluuee]] form, where vvaalluuee is op-
+       tional.   If  present,  the value may be surrounded by a pair of single
+       ('') or double quotes ("") which will be  stripped  off.   The  special
+       characters  in  the  value may be escaped with a backslash to turn them
+       into ordinary characters.
+
+       Lines beginning with a '#' are considered comments and ignored.  A  '#'
+       symbol anywhere after the '=' makes the rest of the line into a comment
+       unless the '#' is inside a quoted section or is escaped.
+
+       Leading and trailing spaces and spaces around the '='  symbol  will  be
+       stripped off.
+
+       Available options include:
+
+       ddeeffaauulltt__ttttll==<<nnuummbbeerr>>
+              The  number  of  seconds  to  set  as the expiration on a cached
+              record.  This will be overridden if the program manages  to  re-
+              trieve  TTL  information along with the addresses (if, for exam-
+              ple, it accesses the DNS directly).  The default is  5  seconds.
+              The value must be in the range 1 to INT_MAX.
+
+       The  file  can also include comments beginning with a '#' character un-
+       less otherwise suppressed by being inside a quoted value or  being  es-
+       caped with a backslash.
+
+
+FFIILLEESS
+       _/_e_t_c_/_k_e_y_._d_n_s___r_e_s_o_l_v_e_r_._c_o_n_f
+
+SSEEEE AALLSSOO
+       kkeeyy..ddnnss__rreessoollvveerr(8)
+
+
+
+Linux                             18 May 2020         KEY.DNS_RESOLVER.CONF(5)
+7be8705faa724197a13b701fa7c0e5e2216235e6bccb371ddc25103002b5fce3

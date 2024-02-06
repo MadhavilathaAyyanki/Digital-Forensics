@@ -1,0 +1,83 @@
+Class::Inspector::FunctUisoenrs(C3opnmt)ributed Perl DocCulmaesnst:a:tIinosnpector::Functions(3pm)
+
+
+
+NNAAMMEE
+       Class::Inspector::Functions - Get information about a class and its
+       structure
+
+VVEERRSSIIOONN
+       version 1.36
+
+SSYYNNOOPPSSIISS
+         use Class::Inspector::Functions;
+         # Class::Inspector provides a non-polluting,
+         # method based interface!
+
+         # Is a class installed and/or loaded
+         installed( 'Foo::Class' );
+         loaded( 'Foo::Class' );
+
+         # Filename related information
+         filename( 'Foo::Class' );
+         resolved_filename( 'Foo::Class' );
+
+         # Get subroutine related information
+         functions( 'Foo::Class' );
+         function_refs( 'Foo::Class' );
+         function_exists( 'Foo::Class', 'bar' );
+         methods( 'Foo::Class', 'full', 'public' );
+
+         # Find all loaded subclasses or something
+         subclasses( 'Foo::Class' );
+
+DDEESSCCRRIIPPTTIIOONN
+       Class::Inspector::Functions is a function based interface of
+       Class::Inspector. For a thorough documentation of the available
+       functions, please check the manual for the main module.
+
+   EExxppoorrttss
+       The following functions are exported by default.
+
+         installed
+         loaded
+         filename
+         functions
+         methods
+         subclasses
+
+       The following functions are exported only by request.
+
+         resolved_filename
+         loaded_filename
+         function_refs
+         function_exists
+
+       All the functions may be imported using the ":ALL" tag.
+
+SSEEEE AALLSSOO
+       <http://ali.as/>, Class::Handle, Class::Inspector
+
+AAUUTTHHOORR
+       Original author: Adam Kennedy <adamk@cpan.org>
+
+       Current maintainer: Graham Ollis <plicease@cpan.org>
+
+       Contributors:
+
+       Tom Wyant
+
+       Steffen Mller
+
+       Kivanc Yazan (KYZN)
+
+CCOOPPYYRRIIGGHHTT AANNDD LLIICCEENNSSEE
+       This software is copyright (c) 2002-2019 by Adam Kennedy.
+
+       This is free software; you can redistribute it and/or modify it under
+       the same terms as the Perl 5 programming language system itself.
+
+
+
+perl v5.28.1                      2019-07-22  Class::Inspector::Functions(3pm)
+4b2e4d239f6e606575263f56e031c799326a1a790dbeb35bc859dd4b4f949e7c

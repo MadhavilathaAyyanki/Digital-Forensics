@@ -1,0 +1,25 @@
+BTMGMT(1)                   General Commands Manual                  BTMGMT(1)
+
+
+
+NNAAMMEE
+       btmgmt: - A command-line interface of BlueZ for management Usage:
+
+              btmgmt [options]
+
+OOPPTTIIOONNSS
+       ----iinnddeexx
+              Specify adapter index
+
+       ----ttiimmeeoouutt
+              Timeout in seconds for non-interactive mode
+
+       ----vveerrssiioonn
+              Display version
+
+       ----hheellpp Display help
+
+
+
+                                  April 2018                         BTMGMT(1)
+633cb7576b4ab7a222c2f82c23de9385138ed3dd19ff8a3ac5f1db38d24a65b1

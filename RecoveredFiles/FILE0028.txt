@@ -1,0 +1,33 @@
+INTRO(5)                   Linux Programmer's Manual                  INTRO(5)
+
+
+
+NNAAMMEE
+       intro - introduction to file formats and filesystems
+
+DDEESSCCRRIIPPTTIIOONN
+       Section  5 of the manual describes various file formats, as well as the
+       corresponding C structures, if any.
+
+       In addition, this section contains a number of pages that document var-
+       ious filesystems.
+
+NNOOTTEESS
+   AAuutthhoorrss aanndd ccooppyyrriigghhtt ccoonnddiittiioonnss
+       Look  at  the  header  of  the manual page source for the author(s) and
+       copyright conditions.  Note that these can be different  from  page  to
+       page!
+
+SSEEEE AALLSSOO
+       ssttaannddaarrddss(7)
+
+CCOOLLOOPPHHOONN
+       This  page  is  part of release 5.10 of the Linux _m_a_n_-_p_a_g_e_s project.  A
+       description of the project, information about reporting bugs,  and  the
+       latest     version     of     this    page,    can    be    found    at
+       https://www.kernel.org/doc/man-pages/.
+
+
+
+Linux                             2017-03-13                          INTRO(5)
+36a26a07801e7089615a932bbee607f0311011a3365b94a9d04a0a09081a7692

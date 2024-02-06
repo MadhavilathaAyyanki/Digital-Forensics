@@ -1,0 +1,279 @@
+Class::Method::ModifierUss(e3rpmC)ontributed Perl DocumeCnltaastsi:o:nMethod::Modifiers(3pm)
+
+
+
+NNAAMMEE
+       Class::Method::Modifiers - Provides Moose-like method modifiers
+
+VVEERRSSIIOONN
+       version 2.13
+
+SSYYNNOOPPSSIISS
+           package Child;
+           use parent 'MyParent';
+           use Class::Method::Modifiers;
+
+           sub new_method { }
+
+           before 'old_method' => sub {
+               carp "old_method is deprecated, use new_method";
+           };
+
+           around 'other_method' => sub {
+               my $orig = shift;
+               my $ret = $orig->(@_);
+               return $ret =~ /\d/ ? $ret : lc $ret;
+           };
+
+           after 'private', 'protected' => sub {
+               debug "finished calling a dangerous method";
+           };
+
+           use Class::Method::Modifiers qw(fresh);
+
+           fresh 'not_in_hierarchy' => sub {
+               warn "freshly added method\n";
+           };
+
+DDEESSCCRRIIPPTTIIOONN
+       Method modifiers are a convenient feature from the CLOS (Common Lisp
+       Object System) world.
+
+       In its most basic form, a method modifier is just a method that calls
+       "$self->SUPER::foo(@_)". I for one have trouble remembering that exact
+       invocation, so my classes seldom re-dispatch to their base classes.
+       Very bad!
+
+       "Class::Method::Modifiers" provides three modifiers: "before",
+       "around", and "after". "before" and "after" are run just before and
+       after the method they modify, but can not really affect that original
+       method. "around" is run in place of the original method, with a hook to
+       easily call that original method.  See the "MODIFIERS" section for more
+       details on how the particular modifiers work.
+
+       One clear benefit of using "Class::Method::Modifiers" is that you can
+       define multiple modifiers in a single namespace. These separate
+       modifiers don't need to know about each other. This makes top-down
+       design easy. Have a base class that provides the skeleton methods of
+       each operation, and have plugins modify those methods to flesh out the
+       specifics.
+
+       Parent classes need not know about "Class::Method::Modifiers". This
+       means you should be able to modify methods in _a_n_y subclass. See
+       Term::VT102::ZeroBased for an example of subclassing with
+       "Class::Method::Modifiers".
+
+       In short, "Class::Method::Modifiers" solves the problem of making sure
+       you call "$self->SUPER::foo(@_)", and provides a cleaner interface for
+       it.
+
+       As of version 1.00, "Class::Method::Modifiers" is faster in some cases
+       than Moose. See _b_e_n_c_h_m_a_r_k_/_m_e_t_h_o_d___m_o_d_i_f_i_e_r_s_._p_l in the Moose
+       distribution.
+
+       "Class::Method::Modifiers" also provides an additional "modifier" type,
+       "fresh"; see below.
+
+MMOODDIIFFIIEERRSS
+       All modifiers let you modify one or multiple methods at a time. The
+       names of multiple methods can be provided as a list or as an array-
+       reference. Examples:
+
+        before 'method' => sub { ... };
+        before 'method1', 'method2' => sub { ... };
+        before [ 'method1', 'method2' ] => sub { ... };
+
+   bbeeffoorree mmeetthhoodd((ss)) ==>> ssuubb {{ ...... }};;
+       "before" is called before the method it is modifying. Its return value
+       is totally ignored. It receives the same @_ as the method it is
+       modifying would have received. You can modify the @_ the original
+       method will receive by changing $_[0] and friends (or by changing
+       anything inside a reference).  This is a feature!
+
+   aafftteerr mmeetthhoodd((ss)) ==>> ssuubb {{ ...... }};;
+       "after" is called after the method it is modifying. Its return value is
+       totally ignored. It receives the same @_ as the method it is modifying
+       received, mostly. The original method can modify @_ (such as by
+       changing $_[0] or references) and "after" will see the modified
+       version. If you don't like this behavior, specify both a "before" and
+       "after", and copy the @_ during "before" for "after" to use.
+
+   aarroouunndd mmeetthhoodd((ss)) ==>> ssuubb {{ ...... }};;
+       "around" is called instead of the method it is modifying. The method
+       you're overriding is passed in as the first argument (called $orig by
+       convention).  Watch out for contextual return values of $orig.
+
+       You can use "around" to:
+
+       Pass $orig a different @_
+               around 'method' => sub {
+                   my $orig = shift;
+                   my $self = shift;
+                   $orig->($self, reverse @_);
+               };
+
+       Munge the return value of $orig
+               around 'method' => sub {
+                   my $orig = shift;
+                   ucfirst $orig->(@_);
+               };
+
+       Avoid calling $orig -- conditionally
+               around 'method' => sub {
+                   my $orig = shift;
+                   return $orig->(@_) if time() % 2;
+                   return "no dice, captain";
+               };
+
+   ffrreesshh mmeetthhoodd((ss)) ==>> ssuubb {{ ...... }};;
+       (Available since version 2.00)
+
+       Unlike the other modifiers, this does not modify an existing method.
+       Ordinarily, "fresh" merely installs the coderef as a method in the
+       appropriate class; but if the class hierarchy already contains a method
+       of the same name, an exception is thrown.  The idea of this "modifier"
+       is to increase safety when subclassing.  Suppose you're writing a
+       subclass of a class Some::Base, and adding a new method:
+
+           package My::Subclass;
+           use base 'Some::Base';
+
+           sub foo { ... }
+
+       If a later version of Some::Base also adds a new method named "foo",
+       your method will shadow that method.  Alternatively, you can use
+       "fresh" to install the additional method into your subclass:
+
+           package My::Subclass;
+           use base 'Some::Base';
+
+           use Class::Method::Modifiers 'fresh';
+
+           fresh 'foo' => sub { ... };
+
+       Now upgrading Some::Base to a version with a conflicting "foo" method
+       will cause an exception to be thrown; seeing that error will give you
+       the opportunity to fix the problem (perhaps by picking a different
+       method name in your subclass, or similar).
+
+       Creating fresh methods with "install_modifier" (see below) provides a
+       way to get similar safety benefits when adding local monkeypatches to
+       existing classes; see
+       <http://aaroncrane.co.uk/talks/monkey_patching_subclassing/>.
+
+       For API compatibility reasons, this function is exported only when you
+       ask for it specifically, or for ":all".
+
+   iinnssttaallll__mmooddiiffiieerr $$ppaacckkaaggee,, $$ttyyppee,, @@nnaammeess,, ssuubb {{ ...... }}
+       "install_modifier" is like "before", "after", "around", and "fresh" but
+       it also lets you dynamically select the modifier type ('before',
+       'after', 'around', 'fresh') and package that the method modifiers are
+       installed into. This expert-level function is exported only when you
+       ask for it specifically, or for ":all".
+
+NNOOTTEESS
+       All three normal modifiers; "before", "after", and "around"; are
+       exported into your namespace by default. You may "use
+       Class::Method::Modifiers ()" to avoid modifying your namespace. I may
+       steal more features from Moose, namely "super", "override", "inner",
+       "augment", and whatever the Moose folks come up with next.
+
+       Note that the syntax and semantics for these modifiers is directly
+       borrowed from Moose (the implementations, however, are not).
+
+       Class::Trigger shares a few similarities with
+       "Class::Method::Modifiers", and they even have some overlap in purpose
+       -- both can be used to implement highly pluggable applications. The
+       difference is that Class::Trigger provides a mechanism for easily
+       letting parent classes to invoke hooks defined by other code.
+       "Class::Method::Modifiers" provides a way of overriding/augmenting
+       methods safely, and the parent class need not know about it.
+
+   ::llvvaalluuee MMEETTHHOODDSS
+       When adding "before" or "after" modifiers, the wrapper method will be
+       an lvalue method if the wrapped sub is, and assigning to the method
+       will propagate to the wrapped method as expected.  For "around"
+       modifiers, it is the modifier sub that determines if the wrapper method
+       is an lvalue method.
+
+CCAAVVEEAATTSS
+       It is erroneous to modify a method that doesn't exist in your class's
+       inheritance hierarchy. If this occurs, an exception will be thrown when
+       the modifier is defined.
+
+       It doesn't yet play well with "caller". There are some "TODO" tests for
+       this.  Don't get your hopes up though!
+
+       Applying modifiers to array lvalue methods is not fully supported.
+       Attempting to assign to an array lvalue method that has an "after"
+       modifier applied will result in an error.  Array lvalue methods are not
+       well supported by perl in general, and should be avoided.
+
+MMAAJJOORR VVEERRSSIIOONN CCHHAANNGGEESS
+       This module was bumped to 1.00 following a complete reimplementation,
+       to indicate breaking backwards compatibility. The "guard" modifier was
+       removed, and the internals are completely different.
+
+       The new version is a few times faster with half the code. It's now even
+       faster than Moose.
+
+       Any code that just used modifiers should not change in behavior, except
+       to become more correct. And, of course, faster. :)
+
+SSEEEE AALLSSOO
+       +o   Class::Method::Modifiers::Fast
+
+       +o   Moose
+
+       +o   Class::Trigger
+
+       +o   Class::MOP::Method::Wrapped
+
+       +o   MRO::Compat
+
+       +o   CLOS <https://en.wikipedia.org/wiki/Common_Lisp_Object_System>
+
+AACCKKNNOOWWLLEEDDGGEEMMEENNTTSS
+       Thanks to Stevan Little for Moose, I would never have known about
+       method modifiers otherwise.
+
+       Thanks to Matt Trout and Stevan Little for their advice.
+
+SSUUPPPPOORRTT
+       Bugs may be submitted through the RT bug tracker
+       <https://rt.cpan.org/Public/Dist/Display.html?Name=Class-Method-
+       Modifiers> (or bug-Class-Method-Modifiers@rt.cpan.org <mailto:bug-
+       Class-Method-Modifiers@rt.cpan.org>).
+
+AAUUTTHHOORR
+       Shawn M Moore <sartak@gmail.com>
+
+CCOONNTTRRIIBBUUTTOORRSS
+       +o   Karen Etheridge <ether@cpan.org>
+
+       +o   Shawn M Moore <code@sartak.org>
+
+       +o   Graham Knop <haarg@haarg.org>
+
+       +o   Aaron Crane <arc@cpan.org>
+
+       +o   Peter Rabbitson <ribasushi@cpan.org>
+
+       +o   Justin Hunter <justin.d.hunter@gmail.com>
+
+       +o   David Steinbrunner <dsteinbrunner@pobox.com>
+
+       +o   gfx <gfuji@cpan.org>
+
+       +o   mannih <github@lxxi.org>
+
+CCOOPPYYRRIIGGHHTT AANNDD LLIICCEENNSSEE
+       This software is copyright (c) 2007 by Shawn M Moore.
+
+       This is free software; you can redistribute it and/or modify it under
+       the same terms as the Perl 5 programming language system itself.
+
+
+
+perl v5.28.1                      2019-08-23     Class::Method::Modifiers(3pm)
+bdcb7f77ec6a93b38953c573027592c14a99269fd59f1dec25c753fd21e78587

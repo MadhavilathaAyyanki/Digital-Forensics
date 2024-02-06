@@ -1,0 +1,57 @@
+BTMON(1)                    General Commands Manual                   BTMON(1)
+
+
+
+NNAAMMEE
+       btmon - Bluetooth monitor
+
+DDEESSCCRRIIPPTTIIOONN
+       btmon - Bluetooth monitor Usage:
+
+              btmon [options]
+
+   ooppttiioonnss::
+       --rr, ----rreeaadd <file>
+              Read traces in btsnoop format
+
+       --ww, ----wwrriittee <file>
+              Save traces in btsnoop format
+
+       --aa, ----aannaallyyzzee <file>
+              Analyze traces in btsnoop format
+
+       --ss, ----sseerrvveerr <socket>
+              Start monitor server socket
+
+       --pp, ----pprriioorriittyy <level> Show only priority or lower
+
+       --ii, ----iinnddeexx <num>
+              Show only specified controller
+
+       --dd, ----ttttyy <tty>
+              Read data from TTY
+
+       --BB, ----ttttyy--ssppeeeedd <rate> Set TTY speed (default 115200)
+
+       --tt, ----ttiimmee
+              Show time instead of time offset
+
+       --TT, ----ddaattee
+              Show time and date information
+
+       --SS, ----ssccoo
+              Dump SCO traffic
+
+       --AA, ----aa22ddpp
+              Dump A2DP stream traffic
+
+       --EE, ----eelllliissyyss [ip]
+              Send Ellisys HCI Injection
+
+       --hh, ----hheellpp
+              Show help options
+
+
+
+                                  April 2018                          BTMON(1)
+621935f64ceeac9bc1a47869ac4cc6c828b64a8a548afb71125068d6f0c682e8

@@ -1,0 +1,900 @@
+INTERFACES(5)                    File formats                    INTERFACES(5)
+
+
+
+NNAAMMEE
+       /etc/network/interfaces  - network interface configuration for ifup and
+       ifdown
+
+DDEESSCCRRIIPPTTIIOONN
+       /etc/network/interfaces contains network interface configuration infor-
+       mation  for the iiffuupp(8) and iiffddoowwnn(8) commands.  This is where you con-
+       figure how your system is connected to the network.
+
+EEXXAAMMPPLLEE
+       The following  example  configures  two  network  interfaces:  eth0  is
+       brought  up at boot, and uses DHCP for IPv4 and SLAAC for IPv6, whereas
+       eth1 is brought up whenever the network hardware is  detected,  and  is
+       configured with static IPv4 and IPv6 addresses.
+
+       auto eth0
+       allow-hotplug eth1
+
+       iface eth0 inet dhcp
+
+       iface eth0 inet6 auto
+
+       iface eth1 inet static
+            address 192.168.1.2/24
+            gateway 192.168.1.1
+
+       iface eth1 inet6 static
+            address fec0:0:0:1::2/64
+            gateway fec0:0:0:1::1
+
+FFIILLEE FFOORRMMAATT
+       Lines starting with `#' are ignored. Note that end-of-line comments are
+       NOT supported, comments must be on a line of their own.
+
+       A line may be extended across multiple lines by making the last charac-
+       ter a backslash.
+
+       The file consists of zero or more "iface", "mapping", "auto", "allow-",
+       "rename", "source" and "source-directory" stanzas. These  will  be  de-
+       scribed in more detail in the following sections.
+
+IINNTTEERRFFAACCEE SSEELLEECCTTIIOONN
+       Lines  beginning with the word "auto" are used to identify the physical
+       interfaces to be brought up when iiffuupp is run with the --aa option.  (This
+       option  is  also  used by the system boot scripts, so interfaces marked
+       "auto" are brought up at boot time.)  Physical interface  names  should
+       follow  the word "auto" on the same line.  There can be multiple "auto"
+       stanzas.  iiffuupp brings the named interfaces up in the order listed.
+
+       Lines beginning with "allow-" are  used  to  identify  interfaces  that
+       should  be  brought up automatically by various subsystems. This may be
+       done using a command such as "ifup --allow=hotplug  eth0  eth1",  which
+       will  only  bring up eth0 or eth1 if it is listed in an "allow-hotplug"
+       line. Note that "allow-auto"  and  "auto"  are  synonyms.   (Interfaces
+       marked "allow-hotplug" are brought up when udev detects them.  This can
+       either be during boot if the interface is  already  present,  or  at  a
+       later  time,  for  example when plugging in a USB network card.  Please
+       note that this does not have anything to do with  detecting  a  network
+       cable being plugged in.)
+
+       Lines  beginning  with  "no-auto-down"  are used to identify interfaces
+       that should not be brought down by the command "ifdown  -a".  Its  main
+       use  is  to  prevent an interface from being brought down during system
+       shutdown time, for example if the root filesystem is a network filesys-
+       tem  and the interface should stay up until the very end. Note that you
+       can still bring down the interface by specifying the interface name ex-
+       plicitly.
+
+       Lines  beginning  with "no-scripts" are used to identify interfaces for
+       which scripts in _/_e_t_c_/_n_e_t_w_o_r_k_/_i_f_-_*_._d_/ should not be run when those  in-
+       terfaces  are  brought  up or down.  he above will match eth0 and eth1,
+       and will bring up both interfaces using the "iface eth" stanza.
+
+IINNTTEERRFFAACCEE RREENNAAMMIINNGG
+       Lines beginning with "rename" are used to rename interfaces.  It  takes
+       one  or  more arguments in the form of "CUR=NEW", where CUR is the name
+       of an existing interface, and NEW is the new name.  This  becomes  very
+       powerful when combined with pattern matching for the CUR interface.
+
+       Interfaces  are  renamed whenever "ifup" is called.  Renaming logically
+       happens before anything else is done.  So if an  interface  is  started
+       with  the  name "foo", and it has to be renamed to "bar" and brought up
+       at boot time, then one should use the following /etc/network/interfaces
+       file:
+
+       rename foo=bar
+       auto bar
+       iface bar ...
+
+       However,  if  the  interface  is not renamed yet, it is possible to use
+       both "ifup foo" and "ifup bar".  The former command will then automati-
+       cally  be  converted to the latter.  This is mainly useful when ifup is
+       called automatically whenever an interface is hotplugged.
+
+       Interface renaming only works if the operating system supports  it,  if
+       an  interface is not renamed to another existing interface, and may re-
+       quire that the interface that is to be renamed has not been brought  up
+       yet.   If  ifup tries to rename an interface and it fails, it will exit
+       with an error.
+
+IINNCCLLUUDDIINNGG OOTTHHEERR FFIILLEESS
+       Lines beginning with "source" are used to include  stanzas  from  other
+       files, so configuration can be split into many files. The word "source"
+       is followed by the path of file to be sourced. Shell wildcards  can  be
+       used.  (See wwoorrddeexxpp(3) for details.)
+
+       Similarly,  "source-directory" keyword is used to source multiple files
+       at once, without specifying them individually or using shell globs. Ad-
+       ditionally,  when  "source-directory"  is  used, names of the files are
+       checked to match the following regular expression: _^_[_a_-_z_A_-_Z_0_-_9___-_]_+_$. In
+       other words, the names must consist entirely of ASCII upper- and lower-
+       case letters, ASCII digits, ASCII underscores, and ASCII minus-hyphens.
+       In the directory path, shell wildcards may be used as well.
+
+       When  sourcing  files  or directories, if a path doesn't have a leading
+       slash, it's considered relative to the directory containing the file in
+       which  the  keyword is placed. In the example above, if the file is lo-
+       cated at _/_e_t_c_/_n_e_t_w_o_r_k_/_i_n_t_e_r_f_a_c_e_s, paths to the included files  are  un-
+       derstood to be under _/_e_t_c_/_n_e_t_w_o_r_k.
+
+       By  default,  on a freshly installed Debian system, the interfaces file
+       includes a line to source files in the _/_e_t_c_/_n_e_t_w_o_r_k_/_i_n_t_e_r_f_a_c_e_s_._d direc-
+       tory.
+
+MMAAPPPPIINNGGSS
+       Stanzas  beginning  with the word "mapping" are used to determine how a
+       logical interface name is chosen for a physical interface that is to be
+       brought  up.   The  first line of a mapping stanza consists of the word
+       "mapping" followed by a pattern in shell  glob  syntax.   Each  mapping
+       stanza  must contain a ssccrriipptt definition.  The named script is run with
+       the physical interface name as its argument and with  the  contents  of
+       all  following  "map"  lines  (wwiitthhoouutt the leading "map") in the stanza
+       provided to it on its standard input. The script must print a string on
+       its  standard  output before exiting. See _/_u_s_r_/_s_h_a_r_e_/_d_o_c_/_i_f_u_p_d_o_w_n_/_e_x_a_m_-
+       _p_l_e_s for examples of what the script must print.
+
+       Mapping a name consists of searching the remaining mapping patterns and
+       running the script corresponding to the first match; the script outputs
+       the name to which the original is mapped.
+
+       iiffuupp is normally given a physical interface name as its  first  non-op-
+       tion  argument.   iiffuupp  also uses this name as the initial logical name
+       for the interface unless it is accompanied by a   suffix  of  the  form
+       _=_L_O_G_I_C_A_L,  in  which  case  ifup chooses _L_O_G_I_C_A_L as the initial logical
+       name for the interface.  It then maps this  name,  possibly  more  than
+       once  according to successive mapping specifications,  until no further
+       mappings are possible.  If the resulting name is the name of  some  de-
+       fined logical interface then iiffuupp attempts to bring up the physical in-
+       terface as that logical interface.  Otherwise iiffuupp exits with an error.
+
+IINNTTEERRFFAACCEE DDEEFFIINNIITTIIOONNSS
+       Stanzas defining logical interfaces start with a line consisting of the
+       word  "iface" followed by the name of the logical interface.  In simple
+       configurations without mapping stanzas this name should simply  be  the
+       name  of the physical interface to which it is to be applied.  (The de-
+       fault mapping script is, in effect, the eecchhoo command.)   The  interface
+       name  is  followed by the name of the address family that the interface
+       uses.  This will be "inet" for TCP/IP networking,  but  there  is  also
+       some support for IPX networking ("ipx"), and IPv6 networking ("inet6").
+       Following that is the name of the method used to configure  the  inter-
+       face.
+
+       Additional  options  can  be  given  on subsequent lines in the stanza.
+       Which options are available depends on the family and  method,  as  de-
+       scribed  below.   Additional options can be made available by other De-
+       bian packages.  For example, the wireless-tools package makes available
+       a number of options prefixed with "wireless-" which can be used to con-
+       figure the interface using iiwwccoonnffiigg(8)..  (See wwiirreelleessss(7) for details.)
+       A  list  of  packages  providing additional options is mentioned in the
+       section "OPTIONS PROVIDED BY OTHER PACKAGE".
+
+       Options are usually indented for clarity (as in the example above)  but
+       are not required to be.
+
+       Multiple  "iface" stanzas can be given for the same interface, in which
+       case all of the configured addresses and  options  for  that  interface
+       will  be  applied  when  bringing up that interface.  This is useful to
+       configure both IPv4 and IPv6 addresses on the same interface  (although
+       if  no  inet6 stanza is present, the kernel will normally still perform
+       stateless address autoconfiguration if there is an  IPv6  route  adver-
+       tisement  daemon on the network). It can also be used to configure mul-
+       tiple addresses of the same type on a single interface.
+
+IINNTTEERRFFAACCEE TTEEMMPPLLAATTEESS
+       It is possible to define interface definition templates and extend them
+       using the iinnhheerriittss keyword:
+
+       iface ethernet inet static
+            mtu 1500
+            hwaddress 11:22:33:44:55:66
+
+       iface eth0 inet static inherits ethernet
+            address 192.168.1.2/24
+
+       This  may  be useful to separate link-level settings shared by multiple
+       interfaces from, for example, IP address settings specific to every in-
+       terface.
+
+PPAATTTTEERRNN MMAATTCCHHIINNGG IINNTTEERRFFAACCEESS
+       It  is  possible  to use patterns to match one or more real interfaces.
+       These patterns can currently appear in  lines  beginning  with  "auto",
+       "allow-",  "rename" and on the command line.  A pattern has the follow-
+       ing format (see below for exceptions for GNU/Hurd):
+
+       [VARIABLE]/VALUE[/[OPTIONS]][=LOGICAL]
+
+       If no VARIABLE is  given,  this  pattern  will  match  interface  names
+       against the given VALUE.  VALUE can contain wildcard patterns such as ?
+       and *, see the ffnnmmaattcchh(3) function.  When iiffuupp or iiffddoowwnn is  run,  pat-
+       terns  are  replaces by all real interfaces that are currently known to
+       the operating system kernel and whose names match the pattern.  For ex-
+       ample, given the following line:
+
+       auto /eth*
+
+       If  the kernel knows about the interfaces with names lo, eth0 and eth1,
+       then the above line is then interpreted as:
+
+       auto eth0 eth1
+
+       Note that there must still be valid "iface" stanzas for  each  matching
+       interface.  However, it is possible to combine a pattern with a mapping
+       to a logical interface, like so:
+
+       auto /eth*=eth
+       iface eth inet dhcp
+
+       Valid variable names are "mac", in which case value is matched  against
+       the  interface's  MAC address.  On Linux, the variable name can also be
+       any filename in /sys/class/net/<iface>/, in which  case  the  value  is
+       matched against the contents of the corresponding file.
+
+       The  OPTIONS field currently only supports a number. If given, only the
+       n-th interface that has a matching value will actually be used, where n
+       is the number given, starting at 1. So /eth*/1 will match the first in-
+       terface whose name starts with eth.
+
+       On GNU/Hurd, interface names  start  with  /dev/,  and  this  obviously
+       clashes with the format for patterns.  To ensure an interface name like
+       /dev/eth0 does not get interpreted  as  a  pattern,  any  pattern  that
+       starts  with /dev/ is ignored, and instead interpreted as a literal in-
+       terface name.  To make  a  pattern  that  matches  interface  names  on
+       GNU/Hurd, use something like:
+
+       auto /?dev?eth*=eth
+       iface eth inet dhcp
+
+VVLLAANN IINNTTEERRFFAACCEESS
+       To  ease  the  configuration  of  VLAN  interfaces, interfaces having ..
+       (full stop character) in the name are configured as 802.1q tagged  vir-
+       tual  LAN  interface. For example, interface eetthh00..11 is a virtual inter-
+       face with VLAN ID 1 having eetthh00 as its parent interface.
+
+       VLAN interfaces are mostly treated as independent interfaces.  As such,
+       a VLAN interface is normally not automatically brought up when its par-
+       ent interface is brought up.  The exception is when ifup is called with
+       the  --allow  option, in which case all VLAN interfaces that are in the
+       same allow class as the parent interface are brought up  together  with
+       the parent interface.  For example:
+
+       allow-hotplug eth0 eth0.1
+
+       iface eth0 inet static
+            address ...
+
+       iface eth0.1 inet static
+            address ...
+
+       iface eth0.2 inet static
+            address ...
+
+       In  the  above example, when "ifup --allow hotplug eth0" is called (ei-
+       ther manually or because udev triggers this when a  network  device  is
+       hotplugged),  the  interface  eth0  and  the  VLAN interface eth0.1 are
+       brought up, but eth0.2 is not.
+
+       Keep in mind that pattern matching will only match interfaces the  ker-
+       nel  knows  about,  so it is not possible to specify "auto /eth0.*" and
+       have all VLAN interfaces for eth0 be brought up at boot time.   Another
+       way  to  ensure  that a VLAN interface is brought up automatically when
+       the parent interface is brought up, is to use a recursive call to ifup,
+       like so:
+
+       iface eth0 inet manual
+            up ifup eth0.3
+
+       iface eth0.3 inet static
+            address ...
+
+       Note  that  there  is  no need to add an explicit call to ifdown, since
+       VLAN interfaces are automatically brought down  whenever  their  parent
+       interfaces are brought down.
+
+IIFFAACCEE OOPPTTIIOONNSS
+       The  following  "command"  options  are  available for every family and
+       method.  Each of these options can be given multiple times in a  single
+       stanza,  in  which case the commands are executed in the order in which
+       they appear in the stanza.  (You can ensure a command  never  fails  by
+       suffixing them with "|| true".)
+
+       pprree--uupp _c_o_m_m_a_n_d
+              Run  _c_o_m_m_a_n_d  before bringing the interface up.  If this command
+              fails then iiffuupp aborts, refraining from marking the interface as
+              configured,  prints  an  error message, and exits with status 0.
+              This behavior may change in the future.
+
+       uupp _c_o_m_m_a_n_d
+
+       ppoosstt--uupp _c_o_m_m_a_n_d
+              Run _c_o_m_m_a_n_d after bringing the interface up.   If  this  command
+              fails then iiffuupp aborts, refraining from marking the interface as
+              configured (even though it has really been  configured),  prints
+              an  error  message,  and exits with status 0.  This behavior may
+              change in the future.
+
+       ddoowwnn _c_o_m_m_a_n_d
+
+       pprree--ddoowwnn _c_o_m_m_a_n_d
+              Run _c_o_m_m_a_n_d before taking the interface down.  If  this  command
+              fails  then  iiffddoowwnn  aborts, marks the interface as deconfigured
+              (even though it has not really  been  deconfigured),  and  exits
+              with status 0.  This behavior may change in the future.
+
+       ppoosstt--ddoowwnn _c_o_m_m_a_n_d
+              Run  _c_o_m_m_a_n_d  after  taking the interface down.  If this command
+              fails then iiffddoowwnn aborts, marks the interface  as  deconfigured,
+              and  exits  with  status 0.  This behavior may change in the fu-
+              ture.
+
+       ddeessccrriippttiioonn _n_a_m_e
+              Alias interface by _n_a_m_e
+
+HHOOOOKK SSCCRRIIPPTTSS
+       There are four directories in which scripts can be  placed  which  will
+       always  be  run for any interface during certain phases of ifup and if-
+       down commands. These are:
+
+       _/_e_t_c_/_n_e_t_w_o_r_k_/_i_f_-_p_r_e_-_u_p_._d_/
+              Scripts in this directory are run before bringing the  interface
+              up.
+
+       _/_e_t_c_/_n_e_t_w_o_r_k_/_i_f_-_u_p_._d_/
+              Scripts  in  this directory are run after bringing the interface
+              up.
+
+       _/_e_t_c_/_n_e_t_w_o_r_k_/_i_f_-_d_o_w_n_._d_/
+              Scripts in this directory are run before bringing the  interface
+              down.
+
+       _/_e_t_c_/_n_e_t_w_o_r_k_/_i_f_-_p_o_s_t_-_d_o_w_n_._d_/
+              Scripts  in  this directory are run after bringing the interface
+              down.
+
+       The scripts in which are run (with no arguments) using rruunn--ppaarrttss(8) af-
+       ter  the  corresponding  pprree--uupp,  uupp, ddoowwnn and ppoosstt--ddoowwnn options in the
+       _/_e_t_c_/_n_e_t_w_o_r_k_/_i_n_t_e_r_f_a_c_e_s file itself have been  processed.  Please  note
+       that as ppoosstt--uupp and pprree--ddoowwnn are aliases, no files in the corresponding
+       directories are processed.  Please use _i_f_-_u_p_._d and  _i_f_-_d_o_w_n_._d  directo-
+       ries instead.
+
+EENNVVIIRROONNMMEENNTT VVAARRIIAABBLLEESS
+       All  hook  scripts,  and  the commands executed by pprree--uupp, uupp, ppoosstt--uupp,
+       pprree--ddoowwnn, ddoowwnn and ppoosstt--ddoowwnn have access to the  following  environment
+       variables:
+
+       IIFFAACCEE  The  physical  name of the interface being processed, or "--all"
+              (see below).
+
+       LLOOGGIICCAALL
+              The logical name of the interface  being  processed,  or  "auto"
+              (see below).
+
+       AADDDDRRFFAAMM
+              The address family of the interface, or "meta" (see below).
+
+       MMEETTHHOODD The  method  of the interface (e.g., _s_t_a_t_i_c), or "none" (see be-
+              low).
+
+       CCLLAASSSS  The class of interfaces being processed.  This is a copy of  the
+              value  given  to the ----aallllooww option when running ifup or ifdown,
+              otherwise it is set to "auto" when the ----aallll option is used.
+
+       CCLLAASSSS  The class of interfaces being processed.  This is a copy of  the
+              value  given  to the ----aallllooww option when running ifup or ifdown,
+              otherwise it is set to "auto" when the ----aallll option is used.
+
+       MMOODDEE   _s_t_a_r_t if run from ifup, _s_t_o_p if run from ifdown_.
+
+       PPHHAASSEE  As per MODE, but with finer granularity, distinguishing the _p_r_e_-
+              _u_p, _p_o_s_t_-_u_p, _p_r_e_-_d_o_w_n and _p_o_s_t_-_d_o_w_n phases.
+
+       VVEERRBBOOSSIITTYY
+              Indicates whether ----vveerrbboossee was used; set to 1 if so, 0 if not.
+
+       PPAATTHH   The   command   search   path:  _/_u_s_r_/_l_o_c_a_l_/_s_b_i_n_:_/_u_s_r_/_l_o_c_a_l_/_b_i_n_:_-
+              _/_u_s_r_/_s_b_i_n_:_/_u_s_r_/_b_i_n_:_/_s_b_i_n_:_/_b_i_n
+
+       Additionally, all options given in an interface definition  stanza  are
+       exported to the environment in upper case with "IF_" prepended and with
+       hyphens converted to underscores and non-alphanumeric  characters  dis-
+       carded.
+
+       When  ifupdown is being called with the ----aallll option, before doing any-
+       thing to interfaces, it calls all the hook  scripts  (_p_r_e_-_u_p  or  _d_o_w_n)
+       with  IIFFAACCEE set to "--all", LLOOGGIICCAALL set to the current value of --allow
+       parameter  (or  "auto"   if   it's   not   set),   AADDDDRRFFAAMM="meta"   and
+       MMEETTHHOODD="none".   After all the interfaces have been brought up or taken
+       down, the appropriate scripts (_u_p or _p_o_s_t_-_d_o_w_n) are executed.
+
+CCOONNCCUURRRREENNCCYY AANNDD PPAARRAALLLLEELL EEXXEECCUUTTIIOONN
+       Ifupdown uses per-interface locking to ensure that concurrent ifup  and
+       ifdown  calls  to the same interface are run in serial.  However, calls
+       to different interfaces will be able to run in parallel.  It is  there-
+       fore important that any hook scripts and _p_r_e_-_u_p, _u_p, _d_o_w_n and _p_o_s_t_-_d_o_w_n
+       commands are written with the  possibility  of  parallel  execution  in
+       mind.
+
+       It is allowed to recursively call iiffuupp and iiffddoowwnn from hook scripts and
+       interface commands, as long as these calls refer to a different  inter-
+       face  than the one that is already being (de)configured.  Loops are de-
+       tected and will result in the call failing instead of a  deadlock,  al-
+       though it is best if one does not rely on that.
+
+OOPPTTIIOONNSS PPRROOVVIIDDEEDD BBYY OOTTHHEERR PPAACCKKAAGGEESS
+       This  manual  page  documents the configuration options provided by the
+       ifupdown package.  However,  other  packages  can  make  other  options
+       available  for use in /etc/network/interfaces.  Here is a list of pack-
+       ages that provide such extensions:
+
+       arping, avahi-autoipd, avahi-daemon, bind9, bridge-utils, clamav-fresh-
+       clam,  controlaula,  epoptes-client,  ethtool,  guidedog, hostap-utils,
+       hostapd, htpdate, ifenslave, ifmetric, ifupdown-extra,  ifupdown-multi,
+       ifupdown-scripts-zg2,  initscripts, isatapd, linux-wlan-ng, lprng, mac-
+       changer, miredo, nslcd, ntpdate, openntpd, openresolv,  openssh-server,
+       openvpn, openvswitch-switch, postfix, resolvconf, sendmail-base, shore-
+       wall-init, slrn, slrnpull,  tinc,  ucarp,  uml-utilities,  uruk,  vde2,
+       vlan,  vzctl,  whereami, wide-dhcpv6-client, wireless-tools, wpasuppli-
+       cant.
+
+       Please consult the documentation  of  those  packages  for  information
+       about how they extend ifupdown.
+
+IINNEETT AADDDDRREESSSS FFAAMMIILLYY
+       This  section  documents the methods available in the inet address fam-
+       ily.
+
+   TThhee llooooppbbaacckk MMeetthhoodd
+       This method may be used to define the IPv4 loopback interface.
+
+       OOppttiioonnss
+
+              (No options)
+
+   TThhee ssttaattiicc MMeetthhoodd
+       This method may be used to define Ethernet interfaces  with  statically
+       allocated IPv4 addresses.
+
+       OOppttiioonnss
+
+              aaddddrreessss _a_d_d_r_e_s_s
+                     Address (dotted quad/netmask) rreeqquuiirreedd
+
+              nneettmmaasskk _m_a_s_k
+                     Netmask (dotted quad or number of bits) ddeepprreeccaatteedd
+
+              bbrrooaaddccaasstt _b_r_o_a_d_c_a_s_t___a_d_d_r_e_s_s
+                     Broadcast  address  (dotted quad, + or -) ddeepprreeccaatteedd. De-
+                     fault value: "+"
+
+              mmeettrriicc _m_e_t_r_i_c
+                     Routing metric for default gateway (integer)
+
+              ggaatteewwaayy _a_d_d_r_e_s_s
+                     Default gateway (dotted quad)
+
+              ppooiinnttooppooiinntt _a_d_d_r_e_s_s
+                     Address of other end point (dotted quad). Note the spell-
+                     ing of "point-to".
+
+              hhwwaaddddrreessss _a_d_d_r_e_s_s
+                     Link local address or "random".
+
+              mmttuu _s_i_z_e
+                     MTU size
+
+              ssccooppee  Address  validity  scope.  Possible values: global, link,
+                     host
+
+   TThhee mmaannuuaall MMeetthhoodd
+       This method may be used to define interfaces for which no configuration
+       is done by default. Such interfaces can be configured manually by means
+       of uupp and ddoowwnn commands or /etc/network/if-*.d scripts.
+
+       OOppttiioonnss
+
+              hhwwaaddddrreessss _a_d_d_r_e_s_s
+                     Link local address or "random".
+
+              mmttuu _s_i_z_e
+                     MTU size
+
+   TThhee ddhhccpp MMeetthhoodd
+       This method may be used to obtain an address via DHCP with any  of  the
+       tools:  dhclient, pump, udhcpc, dhcpcd. (They have been listed in their
+       order of precedence.) If you have a complicated DHCP setup  you  should
+       note  that  some of these clients use their own configuration files and
+       do not obtain their configuration information via iiffuupp.
+
+       OOppttiioonnss
+
+              hhoossttnnaammee _h_o_s_t_n_a_m_e
+                     Hostname to be requested (pump, dhcpcd, udhcpc)
+
+              mmeettrriicc _m_e_t_r_i_c
+                     Metric for added routes (dhclient)
+
+              lleeaasseehhoouurrss _l_e_a_s_e_h_o_u_r_s
+                     Preferred lease time in hours (pump)
+
+              lleeaasseettiimmee _l_e_a_s_e_t_i_m_e
+                     Preferred lease time in seconds (dhcpcd)
+
+              vveennddoorr _v_e_n_d_o_r___i_d
+                     Vendor class identifier (dhcpcd)
+
+              cclliieenntt _c_l_i_e_n_t___i_d
+                     Client identifier (dhcpcd), or "no" (dhclient)
+
+              hhwwaaddddrreessss _a_d_d_r_e_s_s
+                     Hardware address.
+
+   TThhee bboooottpp MMeetthhoodd
+       This method may be used to obtain an address via bootp.
+
+       OOppttiioonnss
+
+              bboooottffiillee _f_i_l_e
+                     Tell the server to use _f_i_l_e as the bootfile.
+
+              sseerrvveerr _a_d_d_r_e_s_s
+                     Use the  IP  address  _a_d_d_r_e_s_s  to  communicate  with  the
+                     server.
+
+              hhwwaaddddrr _a_d_d_r
+                     Use  _a_d_d_r  as the hardware address instead of whatever it
+                     really is.
+
+   TThhee ttuunnnneell MMeetthhoodd
+       This method is used to create GRE or IPIP tunnels. You need to have the
+       iipp  binary  from the iipprroouuttee package. For GRE tunnels, you will need to
+       load the ip_gre module and the ipip module for IPIP tunnels.
+
+       OOppttiioonnss
+
+              aaddddrreessss _a_d_d_r_e_s_s
+                     Local address (dotted quad) rreeqquuiirreedd
+
+              mmooddee _t_y_p_e
+                     Tunnel type (either GRE or IPIP) rreeqquuiirreedd
+
+              eennddppooiinntt _a_d_d_r_e_s_s
+                     Address of other tunnel endpoint rreeqquuiirreedd
+
+              ddssttaaddddrr _a_d_d_r_e_s_s
+                     Remote address (remote address inside tunnel)
+
+              llooccaall _a_d_d_r_e_s_s
+                     Address of the local endpoint
+
+              mmeettrriicc _m_e_t_r_i_c
+                     Routing metric for default gateway (integer)
+
+              ggaatteewwaayy _a_d_d_r_e_s_s
+                     Default gateway
+
+              ttttll _t_i_m_e
+                     TTL setting
+
+              mmttuu _s_i_z_e
+                     MTU size
+
+   TThhee pppppp MMeetthhoodd
+       This method uses pon/poff to configure a PPP interface. See those  com-
+       mands for details.
+
+       OOppttiioonnss
+
+              pprroovviiddeerr _n_a_m_e
+                     Use _n_a_m_e as the provider (from /etc/ppp/peers).
+
+              uunniitt _n_u_m_b_e_r
+                     Use _n_u_m_b_e_r as the ppp unit number.
+
+              ooppttiioonnss _s_t_r_i_n_g
+                     Pass _s_t_r_i_n_g as additional options to pon.
+
+   TThhee wwvvddiiaall MMeetthhoodd
+       This  method uses wvdial to configure a PPP interface. See that command
+       for more details.
+
+       OOppttiioonnss
+
+              pprroovviiddeerr _n_a_m_e
+                     Use _n_a_m_e as the provider (from /etc/wvdial.conf).
+
+   TThhee iippvv44llll MMeetthhoodd
+       This method uses avahi-autoipd to configure an interface with  an  IPv4
+       Link-Layer  address  (169.254.0.0/16 family). This method is also known
+       as APIPA or IPAC, and often colloquially referred to as  "Zeroconf  ad-
+       dress".
+
+       OOppttiioonnss
+
+              (No options)
+
+IIPPXX AADDDDRREESSSS FFAAMMIILLYY
+       This section documents the methods available in the ipx address family.
+
+   TThhee ssttaattiicc MMeetthhoodd
+       This  method  may  be  used  to setup an IPX interface. It requires the
+       _i_p_x___i_n_t_e_r_f_a_c_e command.
+
+       OOppttiioonnss
+
+              ffrraammee _t_y_p_e
+                     _t_y_p_e of Ethernet frames to use (e.g. 880022..22)
+
+              nneettnnuumm _i_d
+                     Network number
+
+   TThhee ddyynnaammiicc MMeetthhoodd
+       This method may be used to setup an IPX interface dynamically.
+
+       OOppttiioonnss
+
+              ffrraammee _t_y_p_e
+                     _t_y_p_e of Ethernet frames to use (e.g. 880022..22)
+
+IINNEETT66 AADDDDRREESSSS FFAAMMIILLYY
+       This section documents the methods available in the inet6 address  fam-
+       ily.
+
+   TThhee aauuttoo MMeetthhoodd
+       This  method  may  be  used to define interfaces with automatically as-
+       signed IPv6 addresses. Using this method on its own doesn't  mean  that
+       RDNSS  options will be applied, too. To make this happen, rrddnnssssdd daemon
+       must be installed, properly configured and running. If stateless DHCPv6
+       support  is turned on, then additional network configuration parameters
+       such as DNS and NTP servers will  be  retrieved  from  a  DHCP  server.
+       Please  note  that  on  ifdown,  the lease is not currently released (a
+       known bug).
+
+       OOppttiioonnss
+
+              pprriivveexxtt _i_n_t
+                     Privacy extensions (RFC4941) (0=off, 1=assign, 2=prefer)
+
+              aacccceepptt__rraa _i_n_t
+                     Accept router advertisements (0=off, 1=on,  2=on+forward-
+                     ing). Default value: "2"
+
+              ddhhccpp _i_n_t
+                     Use stateless DHCPv6 (0=off, 1=on)
+
+              rreeqquueesstt__pprreeffiixx _i_n_t
+                     Request a prefix through DHCPv6 Prefix Delegation (0=off,
+                     1=on). Default value: "0"
+
+              llll--aatttteemmppttss
+                     Number of attempts to wait for a link-local address.  De-
+                     fault value: "60"
+
+              llll--iinntteerrvvaall
+                     Link-local  address  polling interval in seconds. Default
+                     value: "0.1"
+
+   TThhee llooooppbbaacckk MMeetthhoodd
+       This method may be used to define the IPv6 loopback interface.
+
+       OOppttiioonnss
+
+              (No options)
+
+   TThhee ssttaattiicc MMeetthhoodd
+       This method may be used to define interfaces with  statically  assigned
+       IPv6 addresses. By default, stateless autoconfiguration is disabled for
+       this interface.
+
+       OOppttiioonnss
+
+              aaddddrreessss _a_d_d_r_e_s_s
+                     Address (colon delimited/netmask) rreeqquuiirreedd
+
+              nneettmmaasskk _m_a_s_k
+                     Netmask (number of bits, eg 64) ddeepprreeccaatteedd
+
+              mmeettrriicc _m_e_t_r_i_c
+                     Routing metric for default gateway (integer)
+
+              ggaatteewwaayy _a_d_d_r_e_s_s
+                     Default gateway (colon delimited)
+
+              mmeeddiiaa _t_y_p_e
+                     Medium type, driver dependent
+
+              hhwwaaddddrreessss _a_d_d_r_e_s_s
+                     Hardware address or "random"
+
+              mmttuu _s_i_z_e
+                     MTU size
+
+              aacccceepptt__rraa _i_n_t
+                     Accept router advertisements (0=off, 1=on,  2=on+forward-
+                     ing)
+
+              aauuttooccoonnff _i_n_t
+                     Perform  stateless  autoconfiguration  (0=off, 1=on). De-
+                     fault value: "0"
+
+              pprriivveexxtt _i_n_t
+                     Privacy extensions (RFC3041) (0=off, 1=assign, 2=prefer)
+
+              ssccooppee  Address validity scope. Possible  values:  global,  site,
+                     link, host
+
+              pprreeffeerrrreedd--lliiffeettiimmee _i_n_t
+                     Time that address remains preferred
+
+              ddaadd--aatttteemmppttss
+                     Number  of attempts to settle DAD (0 to disable DAD). De-
+                     fault value: "60"
+
+              ddaadd--iinntteerrvvaall
+                     DAD state polling interval  in  seconds.  Default  value:
+                     "0.1"
+
+   TThhee mmaannuuaall MMeetthhoodd
+       This method may be used to define interfaces for which no configuration
+       is done by default. Such interfaces can be configured manually by means
+       of uupp and ddoowwnn commands or /etc/network/if-*.d scripts.
+
+       OOppttiioonnss
+
+              hhwwaaddddrreessss _a_d_d_r_e_s_s
+                     Hardware address or "random"
+
+              mmttuu _s_i_z_e
+                     MTU size
+
+   TThhee ddhhccpp MMeetthhoodd
+       This  method  may be used to obtain network interface configuration via
+       stateful DHCPv6 with dhclient. In stateful DHCPv6, the DHCP  server  is
+       responsible for assigning addresses to clients.
+
+       OOppttiioonnss
+
+              hhwwaaddddrreessss _a_d_d_r_e_s_s
+                     Hardware address or "random"
+
+              aacccceepptt__rraa _i_n_t
+                     Accept  router advertisements (0=off, 1=on, 2=on+forward-
+                     ing). Default value: "1"
+
+              aauuttooccoonnff _i_n_t
+                     Perform stateless autoconfiguration (0=off, 1=on)
+
+              rreeqquueesstt__pprreeffiixx _i_n_t
+                     Request a prefix through DHCPv6 Prefix Delegation (0=off,
+                     1=on). Default value: "0"
+
+              llll--aatttteemmppttss
+                     Number  of attempts to wait for a link-local address. De-
+                     fault value: "60"
+
+              llll--iinntteerrvvaall
+                     Link-local address polling interval in  seconds.  Default
+                     value: "0.1"
+
+   TThhee vv44ttuunnnneell MMeetthhoodd
+       This  method may be used to setup an IPv6-over-IPv4 tunnel. It requires
+       the iipp command from the iipprroouuttee package.
+
+       OOppttiioonnss
+
+              aaddddrreessss _a_d_d_r_e_s_s
+                     Address (colon delimited/netmask) rreeqquuiirreedd
+
+              nneettmmaasskk _m_a_s_k
+                     Netmask (number of bits, eg 64) ddeepprreeccaatteedd
+
+              eennddppooiinntt _a_d_d_r_e_s_s
+                     Address of other tunnel endpoint (IPv4 dotted  quad)  rree--
+                     qquuiirreedd
+
+              llooccaall _a_d_d_r_e_s_s
+                     Address of the local endpoint (IPv4 dotted quad)
+
+              mmeettrriicc _m_e_t_r_i_c
+                     Routing metric for default gateway (integer)
+
+              ggaatteewwaayy _a_d_d_r_e_s_s
+                     Default gateway (colon delimited)
+
+              ttttll _t_i_m_e
+                     TTL setting
+
+              mmttuu _s_i_z_e
+                     MTU size
+
+              pprreeffeerrrreedd--lliiffeettiimmee _i_n_t
+                     Time that address remains preferred
+
+   TThhee 66ttoo44 MMeetthhoodd
+       This method may be used to setup a 6to4 tunnel. It requires the iipp com-
+       mand from the iipprroouuttee package.
+
+       OOppttiioonnss
+
+              llooccaall _a_d_d_r_e_s_s
+                     Address of the local endpoint (IPv4 dotted quad) rreeqquuiirreedd
+
+              mmeettrriicc _m_e_t_r_i_c
+                     Routing metric for default gateway (integer)
+
+              ttttll _t_i_m_e
+                     TTL setting
+
+              mmttuu _s_i_z_e
+                     MTU size
+
+              pprreeffeerrrreedd--lliiffeettiimmee _i_n_t
+                     Time that address remains preferred
+
+CCAANN AADDDDRREESSSS FFAAMMIILLYY
+       This section documents the methods available in the can address family.
+
+   TThhee ssttaattiicc MMeetthhoodd
+       This method may be used to setup a Controller Area Network (CAN) inter-
+       face. It requires the the iipp command from the iipprroouuttee package.
+
+       OOppttiioonnss
+
+              bbiittrraattee _b_i_t_r_a_t_e
+                     bitrate (1..1000000) rreeqquuiirreedd
+
+              ssaammpplleeppooiinntt _s_a_m_p_l_e_p_o_i_n_t
+                     sample point (0.000..0.999)
+
+              llooooppbbaacckk _l_o_o_p_b_a_c_k
+                     loop back CAN Messages (on|off)
+
+              lliisstteennoonnllyy _l_i_s_t_e_n_o_n_l_y
+                     listen only mode (on|off)
+
+              ttrriippllee _t_r_i_p_l_e
+                     activate triple sampling (on|off)
+
+              oonneesshhoott _o_n_e_s_h_o_t
+                     one shot mode (on|off)
+
+              bbeerrrr _b_e_r_r
+                     activate berr reporting (on|off)
+
+KKNNOOWWNN BBUUGGSS//LLIIMMIITTAATTIIOONNSS
+       The  iiffuupp  and iiffddoowwnn programs work with so-called "physical" interface
+       names.  These names are assigned to hardware by the  kernel.   Unfortu-
+       nately  it can happen that the kernel assigns different physical inter-
+       face names to the same hardware at different times; for  example,  what
+       was  called  "eth0"  last time you booted is now called "eth1" and vice
+       versa.  This creates a problem if you want to configure the  interfaces
+       appropriately.   A  way  to  deal  with  this problem is to use mapping
+       scripts that choose logical interface names according to the properties
+       of  the  interface  hardware.  See the ggeett--mmaacc--aaddddrreessss..sshh script in the
+       examples directory for an example of such a mapping script.   See  also
+       Debian bug #101728.
+
+AAUUTTHHOORR
+       The   ifupdown  suite  was  written  by  Anthony  Towns  <aj@azure.hum-
+       bug.org.au>.    This   manpage   was   contributed   by    Joey    Hess
+       <joey@kitenet.net>.
+
+SSEEEE AALLSSOO
+       iiffuupp(8), iipp(8), iiffccoonnffiigg(8), rruunn--ppaarrttss(8), rreessoollvvccoonnff(8).
+
+       For  advice  on configuring this package read the NNeettwwoorrkk CCoonnffiigguurraattiioonn
+       chapter of the _D_e_b_i_a_n _R_e_f_e_r_e_n_c_e  manual,  available  at  _h_t_t_p_:_/_/_w_w_w_._d_e_-
+       _b_i_a_n_._o_r_g_/_d_o_c_/_m_a_n_u_a_l_s_/_d_e_b_i_a_n_-_r_e_f_e_r_e_n_c_e_/_c_h_0_5_._e_n_._h_t_m_l  or  in  the ddeebbiiaann--
+       rreeffeerreennccee--eenn package.
+
+       Examples  of   how   to   set   up   interfaces   can   be   found   in
+       //uussrr//sshhaarree//ddoocc//iiffuuppddoowwnn//eexxaammpplleess//nneettwwoorrkk--iinntteerrffaacceess..ggzz.
+
+
+
+ifupdown                         24 July 2017                    INTERFACES(5)
+d2dbab32f132f22b178f900519e29786a5196293fe4b38e11e835f26246e687b

@@ -1,0 +1,52 @@
+BROADWAYD(1)                     User Commands                    BROADWAYD(1)
+
+
+
+NNAAMMEE
+       broadwayd - Broadway display server
+
+SSYYNNOOPPSSIISS
+       bbrrooaaddwwaayydd [--port _P_O_R_T] [--address _A_D_D_R_E_S_S] [--unixsocket _A_D_D_R_E_S_S]
+                 [_:_D_I_S_P_L_A_Y]
+
+DDEESSCCRRIIPPTTIIOONN
+       bbrrooaaddwwaayydd is a display server for the Broadway GDK backend. It allows
+       multiple GTK+ applications to display their windows in the same web
+       browser, by connecting to broadwayd.
+
+       When using broadwayd, specify the display number to use, prefixed with
+       a colon, similar to X. The default display number is 0.
+
+           broadwayd :5
+
+       Then point your web browser at http://127.0.0.1:8085. Start your
+       applications like this:
+
+           GDK_BACKEND=broadway BROADWAY_DISPLAY=:5 gtk3-demo
+
+       You can add password protection for your session by creating a file in
+       $XDG_CONFIG_HOME/broadway.passwd or $HOME/.config/broadway.passwd with
+       a crypt(3) style password hash. A simple way to generate it is with
+       openssl:
+
+           openssl passwd -1  > ~/.config/broadway.passwd
+
+
+OOPPTTIIOONNSS
+       --port
+           Use _P_O_R_T as the HTTP port, instead of the default 8080 + (_D_I_S_P_L_A_Y -
+           1).
+
+       --address
+           Use _A_D_D_R_E_S_S as the HTTP address, instead of the default
+           http://127.0.0.1:_P_O_R_T.
+
+       --unixsocket
+           Use _A_D_D_R_E_S_S as the unix domain socket address. This option
+           overrides --address and --port. It is available only on Unix-like
+           systems.
+
+
+
+GTK+                                                              BROADWAYD(1)
+45cb902494ebd5bb3a9f956ee32f29537bc611e23c74b09f6785725238784ec2

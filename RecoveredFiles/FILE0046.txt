@@ -1,0 +1,67 @@
+cupsenable(8)                    OpenPrinting                    cupsenable(8)
+
+
+
+NNAAMMEE
+       cupsdisable, cupsenable - stop/start printers and classes
+
+SSYYNNOOPPSSIISS
+       ccuuppssddiissaabbllee  [  --EE  ]  [ --UU _u_s_e_r_n_a_m_e ] [ --cc ] [ --hh _s_e_r_v_e_r[::_p_o_r_t] ] [ --rr
+       _r_e_a_s_o_n ] [ ----hhoolldd ] _d_e_s_t_i_n_a_t_i_o_n_(_s_)
+       ccuuppsseennaabbllee [ --EE ] [ --UU _u_s_e_r_n_a_m_e ] [ --cc ] [ --hh _s_e_r_v_e_r[::_p_o_r_t] ]  [  ----rree--
+       lleeaassee ] _d_e_s_t_i_n_a_t_i_o_n_(_s_)
+
+DDEESSCCRRIIPPTTIIOONN
+       ccuuppsseennaabbllee starts the named printers or classes while ccuuppssddiissaabbllee stops
+       the named printers or classes.
+
+OOPPTTIIOONNSS
+       The following options may be used:
+
+       --EE   Forces encryption of the connection to the server.
+
+       --UU _u_s_e_r_n_a_m_e
+            Uses the specified username when connecting to the server.
+
+       --cc   Cancels all jobs on the named destination.
+
+       --hh _s_e_r_v_e_r[::_p_o_r_t]
+            Uses the specified server and port.
+
+       ----hhoolldd
+            Holds remaining jobs on the named printer.   Useful  for  allowing
+            the current job to complete before performing maintenance.
+
+       --rr ""_r_e_a_s_o_n""
+            Sets  the message associated with the stopped state.  If no reason
+            is specified then the message is set to "Reason Unknown".
+
+       ----rreelleeaassee
+            Releases pending jobs for printing.  Use after running ccuuppssddiissaabbllee
+            with the _-_-_h_o_l_d option to resume printing.
+
+CCOONNFFOORRMMIINNGG TTOO
+       Unlike  the System V printing system, CUPS allows printer names to con-
+       tain any printable character except SPACE, TAB,  "/",  or  "#".   Also,
+       printer and class names are _n_o_t case-sensitive.
+
+       The System V versions of these commands are ddiissaabbllee and eennaabbllee, respec-
+       tively.  They have been renamed to avoid  conflicts  with  the  bbaasshh(1)
+       build-in commands of the same names.
+
+       The  CUPS versions of ddiissaabbllee and eennaabbllee may ask the user for an access
+       password depending on the printing system configuration.  This  differs
+       from the System V versions which require the root user to execute these
+       commands.
+
+SSEEEE AALLSSOO
+       ccuuppssaacccceepptt(8), ccuuppssrreejjeecctt(8), ccaanncceell(1), llpp(1), llppaaddmmiinn(8),  llppssttaatt(1),
+       CUPS Online Help (http://localhost:631/help)
+
+CCOOPPYYRRIIGGHHTT
+       Copyright (C) 2021-2022 by OpenPrinting.
+
+
+
+2021-02-28                           CUPS                        cupsenable(8)
+e7f020f5d7abec10d6c244395013e74c19792668facecdabd8b8a89438694f38
