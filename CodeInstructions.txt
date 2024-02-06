@@ -1,0 +1,43 @@
+This Python program is a part of a file recovery program which reads a binary image file that looks for directories and files in it, and lists them. 
+Here are the essential code instructions to execute the program:
+
+1) sys, struct, and os modules must be imported.
+2) Created a class called 'FAT' which takes the binary image file fat16-36269348-13.img as a parameter.
+3) In main() method, pass the path of the image file fat16-36269348-13.img in the instance of the FAT class and created the folders GoodFiles and RecoveredFiles as they do not exist to store files in them. Calls the search_files_folders() method from FAT class to invoke the search operations to find the directories and files in the disk image.
+4) Within the 'FAT' class, defined '__init__()' method which initialises and extracts all the memory attributes of the image file that are used to get directory location, file location and file contents.
+5) Defined 'get_fat_offset_data()' method which reads the contents of the current cluster where the offset values are obtained by unpacking the cluster bytes where a fat table is used to know the starting and ending range and returns the offset for next cluster.
+6) Defined 'fetch_bytes_data' method which returns specific number of bytes starting from specific sector and the number of bytes is obtained by using the BPB_BytsPerSec value
+7) Defined 'search_files_folders()' method which identifies directories and files in the image. 
+8) Writes the folder/directory at cluster details along with the file type, file name and file length to the listing.txt file which is then stored under GoodFiles directory. Writes all the bin files to the relevant file names and stores them in RecoveredFiles directory as FILE0001.bin, FILE0002.bin etc. 
+9) Trims the unwanted bits of .bin files to get the actual file size. Writes all the trimmed text files to the relevant file names and store them in RecoveredFiles as FILE0001.txt, FILE0002.txt etc.
+10) Writes all the recovered goodfiles to the relevant file names and store them under GoodFiles directory along with listing.txt file.
+11) Defined '_unlinked_()' method which is used to get the unlinked files present in each cluster by parsing the directory list with jump value of 32.
+12) Closes the opened image file once the data is parsed and all navigation operations are completed.
+
+
+
+EXPECTED OUTPUT:
+After successfully executing the python program, the output format looks as below:
+
+self.BytsPerSec=512 bytes
+self.Sectors_Per_Cluster=4 sectors
+self.ResvdSecCnt=4 sectors
+self.NumFATs=2
+self.RootEntCnt=512 entries
+self.TotSec16=32000 sectors
+self.FATSz16=32 sectors
+self.HiddSec=0 sectors
+
+
+Directory found at the below clusters:
+Cluster 3
+Cluster 67
+Cluster 81
+Cluster 117
+Cluster 188
+Cluster 211
+
+Total GoodFiles found are 50
+
+1) Now all the 50 GoodFiles information will be stored to listing.txt file and files identified from recovered directories with their correct names and lengths stored under GoodFiles directory.
+2) .bin and the trimmed .txt files will be stored under RecoveredFiles directory.
